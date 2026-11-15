@@ -13,13 +13,13 @@ Aucune donnée ne quitte ton téléphone.
 | Source | Lien |
 | --- | --- |
 | **Dernière version (GitHub Releases)** | https://github.com/cherifcoder/NEWVERSIONAPK/releases/latest |
-| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.1.0-apk* |
+| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.1.1-apk* |
 
-**Fichier :** `METHOD-1.1.0.apk` — min. Android 7.0 (API 24).
+**Fichier :** `METHOD-1.1.1.apk` — min. Android 7.0 (API 24).
 
 ### Installation sur le téléphone
 
-1. Télécharge `METHOD-1.1.0.apk` sur ton téléphone.
+1. Télécharge `METHOD-1.1.1.apk` sur ton téléphone.
 2. Ouvre le fichier (Gestionnaire de fichiers → *Téléchargements*).
 3. Android affiche un avertissement : autorise **« Installer des applications inconnues »**
    pour ton navigateur / gestionnaire de fichiers.
@@ -84,8 +84,10 @@ génération 100 % locale) : **[docs/MODULE_NON_VERBAL.md](docs/MODULE_NON_VERBA
 ## 🔐 Vie privée
 
 - Toutes les données restent **sur l'appareil** (`localStorage`, clé `method.state.v1`).
-- Médias hors-ligne : **Cache Storage** (`method-media-v1`) sur le web, dossier
-  applicatif natif (`Directory.Data`) dans l'APK via `@capacitor/filesystem`.
+- Médias hors-ligne : **Cache Storage** (`method-media-v1`) sur le web ; dans
+  l'APK, l'audio et les fiches sont **déjà embarqués** dans les assets et lus
+  sans réseau (seuls de vrais médias distants passent par `Directory.Data` via
+  `@capacitor/filesystem`).
 - Aucun compte, aucun tracking, aucun serveur propriétaire.
 - **Export / Import** JSON dans *Réglages* pour sauvegarder ou transférer
   (inclut la progression du module non-verbal).
@@ -154,11 +156,11 @@ Le workflow `.github/workflows/android.yml` construit l'APK signé à chaque
 lors d'un tag `v*` :
 
 ```bash
-git tag v1.1.0
-git push origin v1.1.0
+git tag v1.1.1
+git push origin v1.1.1
 ```
 
-L'APK est nommé d'après la version : `METHOD-1.1.0.apk`.
+L'APK est nommé d'après la version : `METHOD-1.1.1.apk`.
 
 ### Signature
 
