@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0d16"/>
+      <stop offset="100%" stop-color="#05060a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f7ecd0"/>
+      <stop offset="50%" stop-color="#cfa851"/>
+      <stop offset="100%" stop-color="#946d24"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0" r="0.8">
+      <stop offset="0%" stop-color="#cfa851" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#cfa851" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1400" height="900" fill="url(#bg)"/>
+  <rect width="1400" height="900" fill="url(#halo)"/>
+  <g opacity="0.07" stroke="#cfa851" stroke-width="1">
+    <line x1="0" y1="0" x2="0" y2="900"/><line x1="100" y1="0" x2="100" y2="900"/><line x1="200" y1="0" x2="200" y2="900"/><line x1="300" y1="0" x2="300" y2="900"/><line x1="400" y1="0" x2="400" y2="900"/><line x1="500" y1="0" x2="500" y2="900"/><line x1="600" y1="0" x2="600" y2="900"/><line x1="700" y1="0" x2="700" y2="900"/><line x1="800" y1="0" x2="800" y2="900"/><line x1="900" y1="0" x2="900" y2="900"/><line x1="1000" y1="0" x2="1000" y2="900"/><line x1="1100" y1="0" x2="1100" y2="900"/><line x1="1200" y1="0" x2="1200" y2="900"/><line x1="1300" y1="0" x2="1300" y2="900"/>
+    <line x1="0" y1="0" x2="1400" y2="0"/><line x1="0" y1="100" x2="1400" y2="100"/><line x1="0" y1="200" x2="1400" y2="200"/><line x1="0" y1="300" x2="1400" y2="300"/><line x1="0" y1="400" x2="1400" y2="400"/><line x1="0" y1="500" x2="1400" y2="500"/><line x1="0" y1="600" x2="1400" y2="600"/><line x1="0" y1="700" x2="1400" y2="700"/><line x1="0" y1="800" x2="1400" y2="800"/>
+  </g>
+  <rect x="40" y="40" width="1320" height="820" fill="none" stroke="#cfa851" stroke-opacity="0.28" rx="18"/>
+  <text x="80" y="112" font-family="Cormorant Garamond, Georgia, serif" font-size="52" fill="url(#gold)" letter-spacing="1">Business & Street Board</text>
+  <text x="80" y="148" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="19" fill="#9aa0b5" letter-spacing="3" text-transform="uppercase">20 idiomes en contexte</text>
+  <line x1="80" y1="172" x2="1320" y2="172" stroke="url(#gold)" stroke-opacity="0.4"/>
+  
+    <rect x="80" y="215" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="237" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to move the needle</text>
+    <text x="98" y="257" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">faire bouger les choses</text>
+    <rect x="80" y="277" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="299" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to cut to the chase</text>
+    <text x="98" y="319" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">aller droit au but</text>
+    <rect x="80" y="339" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="361" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">a ballpark figure</text>
+    <text x="98" y="381" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">un ordre de grandeur</text>
+    <rect x="80" y="401" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="423" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to touch base</text>
+    <text x="98" y="443" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">faire un point</text>
+    <rect x="80" y="463" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="485" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">on the same page</text>
+    <text x="98" y="505" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">être alignés</text>
+    <rect x="80" y="525" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="547" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to circle back</text>
+    <text x="98" y="567" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">revenir sur le sujet</text>
+    <rect x="80" y="587" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="609" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">low-hanging fruit</text>
+    <text x="98" y="629" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">le gain facile</text>
+    <rect x="80" y="649" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="671" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to pull the trigger</text>
+    <text x="98" y="691" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">se décider</text>
+    <rect x="80" y="711" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="733" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">a game changer</text>
+    <text x="98" y="753" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">un tournant décisif</text>
+    <rect x="80" y="773" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="98" y="795" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to own it</text>
+    <text x="98" y="815" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">assumer pleinement</text>
+    <rect x="710" y="215" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="237" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">no strings attached</text>
+    <text x="728" y="257" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">sans contrepartie</text>
+    <rect x="710" y="277" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="299" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to play hardball</text>
+    <text x="728" y="319" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">jouer dur</text>
+    <rect x="710" y="339" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="361" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">keep me in the loop</text>
+    <text x="728" y="381" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">tiens-moi informé</text>
+    <rect x="710" y="401" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="423" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">a long shot</text>
+    <text x="728" y="443" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">peu probable mais tentable</text>
+    <rect x="710" y="463" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="485" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to take it offline</text>
+    <text x="728" y="505" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">en discuter en privé</text>
+    <rect x="710" y="525" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="547" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">skin in the game</text>
+    <text x="728" y="567" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">personnellement engagé</text>
+    <rect x="710" y="587" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="609" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to make a killing</text>
+    <text x="728" y="629" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">faire fortune</text>
+    <rect x="710" y="649" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="671" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to drop the ball</text>
+    <text x="728" y="691" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">rater son coup</text>
+    <rect x="710" y="711" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="733" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">back to square one</text>
+    <text x="728" y="753" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">retour à la case départ</text>
+    <rect x="710" y="773" width="600" height="52" rx="10" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.18"/>
+    <text x="728" y="795" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#f7ecd0" font-weight="600">to be swamped</text>
+    <text x="728" y="815" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="13.5" fill="#9aa0b5">être débordé</text>
+  <text x="1320" y="820" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="14" fill="#6b7189" text-anchor="end">METHOD — Incarne ton Futur Toi</text>
+</svg>

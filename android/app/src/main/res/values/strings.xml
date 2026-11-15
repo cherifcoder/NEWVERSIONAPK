@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">METHOD</string>
+    <string name="title_activity_main">METHOD</string>
+    <string name="package_name">com.cherifcoder.method</string>
+    <string name="custom_url_scheme">com.cherifcoder.method</string>
+</resources>

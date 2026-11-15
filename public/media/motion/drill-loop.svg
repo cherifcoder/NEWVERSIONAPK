@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+  <defs>
+    <linearGradient id="dbg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b0d16"/>
+      <stop offset="100%" stop-color="#05060a"/>
+    </linearGradient>
+    <linearGradient id="dg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f7ecd0"/>
+      <stop offset="100%" stop-color="#946d24"/>
+    </linearGradient>
+    <style>
+      .step { opacity: 0; animation: pop 6s infinite; }
+      .s1 { animation-delay: 0s; }
+      .s2 { animation-delay: 2s; }
+      .s3 { animation-delay: 4s; }
+      .ring { animation: ring 6s infinite; transform-origin: center; }
+      @keyframes pop { 0%,6% {opacity:0; transform: translateY(10px);} 12%,30% {opacity:1; transform: translateY(0);} 36%,100% {opacity:0;} }
+      @keyframes ring { 0%,100% {stroke-opacity:0.25;} 50% {stroke-opacity:0.85;} }
+      .dot { animation: travel 6s infinite linear; }
+      @keyframes travel { 0% {offset-distance:0%;} 100% {offset-distance:100%;} }
+      .flow { stroke-dasharray: 8 10; animation: dash 1.2s linear infinite; }
+      @keyframes dash { to { stroke-dashoffset: -36; } }
+    </style>
+  </defs>
+  <rect width="900" height="600" fill="url(#dbg)"/>
+  <text x="450" y="66" font-family="Cormorant Garamond, Georgia, serif" font-size="38" fill="url(#dg)" text-anchor="middle">Zéro Abandon</text>
+  <text x="450" y="98" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#9aa0b5" text-anchor="middle" letter-spacing="3">UNE BOUCLE OUVERTE À LA FOIS</text>
+  <line x1="450" y1="330" x2="450" y2="330" />
+  <g stroke="#cfa851" stroke-opacity="0.3" fill="none">
+    <circle class="ring" cx="180" cy="330" r="66" stroke-width="2"/>
+    <circle class="ring" cx="450" cy="330" r="66" stroke-width="2" style="animation-delay:0.4s"/>
+    <circle class="ring" cx="720" cy="330" r="66" stroke-width="2" style="animation-delay:0.8s"/>
+  </g>
+  <line class="flow" x1="246" y1="330" x2="384" y2="330" stroke="#cfa851" stroke-width="2" stroke-opacity="0.6"/>
+  <line class="flow" x1="516" y1="330" x2="654" y2="330" stroke="#cfa851" stroke-width="2" stroke-opacity="0.6"/>
+
+  <g class="step s1">
+    <circle cx="180" cy="330" r="52" fill="#cfa851" fill-opacity="0.14" stroke="#e0c07c" stroke-width="2.5"/>
+    <text x="180" y="326" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#f7ecd0" text-anchor="middle">COMMENCER</text>
+    <text x="180" y="348" font-family="Inter, system-ui, sans-serif" font-size="12" fill="#9aa0b5" text-anchor="middle">1 seul projet</text>
+    <text x="180" y="432" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#b9bfd0" text-anchor="middle">Décision prise,</text>
+    <text x="180" y="452" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#b9bfd0" text-anchor="middle">pas d'annonce.</text>
+  </g>
+
+  <g class="step s2">
+    <circle cx="450" cy="330" r="52" fill="#cfa851" fill-opacity="0.14" stroke="#e0c07c" stroke-width="2.5"/>
+    <text x="450" y="326" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#f7ecd0" text-anchor="middle">TENIR</text>
+    <text x="450" y="348" font-family="Inter, system-ui, sans-serif" font-size="12" fill="#9aa0b5" text-anchor="middle">blocs de 90 min</text>
+    <text x="450" y="432" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#b9bfd0" text-anchor="middle">Aucun nouveau projet.</text>
+    <text x="450" y="452" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#b9bfd0" text-anchor="middle">La distraction est l'ennemi.</text>
+  </g>
+
+  <g class="step s3">
+    <circle cx="720" cy="330" r="52" fill="#2f9e78" fill-opacity="0.16" stroke="#2f9e78" stroke-width="2.5"/>
+    <text x="720" y="326" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#d6fff0" text-anchor="middle">LIVRER</text>
+    <text x="720" y="348" font-family="Inter, system-ui, sans-serif" font-size="12" fill="#9aa0b5" text-anchor="middle">preuve exigée</text>
+    <text x="720" y="432" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#b9bfd0" text-anchor="middle">Déployé, publié, commité.</text>
+    <text x="720" y="452" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#b9bfd0" text-anchor="middle">Puis seulement : recommencer.</text>
+  </g>
+
+  <text x="450" y="540" font-family="Cormorant Garamond, Georgia, serif" font-size="22" fill="#e0c07c" text-anchor="middle" font-style="italic">« Tout ce qui est commencé est mené jusqu'au bout. »</text>
+</svg>

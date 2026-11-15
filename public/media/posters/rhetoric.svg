@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0d16"/>
+      <stop offset="100%" stop-color="#05060a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f7ecd0"/>
+      <stop offset="50%" stop-color="#cfa851"/>
+      <stop offset="100%" stop-color="#946d24"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0" r="0.8">
+      <stop offset="0%" stop-color="#cfa851" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#cfa851" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1400" height="900" fill="url(#bg)"/>
+  <rect width="1400" height="900" fill="url(#halo)"/>
+  <g opacity="0.07" stroke="#cfa851" stroke-width="1">
+    <line x1="0" y1="0" x2="0" y2="900"/><line x1="100" y1="0" x2="100" y2="900"/><line x1="200" y1="0" x2="200" y2="900"/><line x1="300" y1="0" x2="300" y2="900"/><line x1="400" y1="0" x2="400" y2="900"/><line x1="500" y1="0" x2="500" y2="900"/><line x1="600" y1="0" x2="600" y2="900"/><line x1="700" y1="0" x2="700" y2="900"/><line x1="800" y1="0" x2="800" y2="900"/><line x1="900" y1="0" x2="900" y2="900"/><line x1="1000" y1="0" x2="1000" y2="900"/><line x1="1100" y1="0" x2="1100" y2="900"/><line x1="1200" y1="0" x2="1200" y2="900"/><line x1="1300" y1="0" x2="1300" y2="900"/>
+    <line x1="0" y1="0" x2="1400" y2="0"/><line x1="0" y1="100" x2="1400" y2="100"/><line x1="0" y1="200" x2="1400" y2="200"/><line x1="0" y1="300" x2="1400" y2="300"/><line x1="0" y1="400" x2="1400" y2="400"/><line x1="0" y1="500" x2="1400" y2="500"/><line x1="0" y1="600" x2="1400" y2="600"/><line x1="0" y1="700" x2="1400" y2="700"/><line x1="0" y1="800" x2="1400" y2="800"/>
+  </g>
+  <rect x="40" y="40" width="1320" height="820" fill="none" stroke="#cfa851" stroke-opacity="0.28" rx="18"/>
+  <text x="80" y="112" font-family="Cormorant Garamond, Georgia, serif" font-size="52" fill="url(#gold)" letter-spacing="1">Carte de rhétorique</text>
+  <text x="80" y="148" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="19" fill="#9aa0b5" letter-spacing="3" text-transform="uppercase">PREP · persuasion · voix</text>
+  <line x1="80" y1="172" x2="1320" y2="172" stroke="url(#gold)" stroke-opacity="0.4"/>
+  
+  
+  <rect x="80" y="210" width="400" height="600" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#b4323c" stroke-opacity="0.26"/>
+  <text x="112" y="258" font-family="Cormorant Garamond, Georgia, serif" font-size="24" fill="#f7ecd0">Structure PREP</text>
+  
+    <circle cx="145" cy="330" r="24" fill="none" stroke="#e0c07c" stroke-width="2"/>
+    <text x="145" y="338" font-family="Cormorant Garamond, Georgia, serif" font-size="22" fill="#e0c07c" text-anchor="middle">P</text>
+    <text x="190" y="322" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="17" fill="#f4f1ea" font-weight="600">Point</text>
+    <text x="190" y="348" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="14" fill="#9aa0b5">Ton affirmation en une phrase.</text>
+    <circle cx="145" cy="450" r="24" fill="none" stroke="#e0c07c" stroke-width="2"/>
+    <text x="145" y="458" font-family="Cormorant Garamond, Georgia, serif" font-size="22" fill="#e0c07c" text-anchor="middle">R</text>
+    <text x="190" y="442" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="17" fill="#f4f1ea" font-weight="600">Raison</text>
+    <text x="190" y="468" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="14" fill="#9aa0b5">Pourquoi, en une phrase.</text>
+    <circle cx="145" cy="570" r="24" fill="none" stroke="#e0c07c" stroke-width="2"/>
+    <text x="145" y="578" font-family="Cormorant Garamond, Georgia, serif" font-size="22" fill="#e0c07c" text-anchor="middle">E</text>
+    <text x="190" y="562" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="17" fill="#f4f1ea" font-weight="600">Exemple</text>
+    <text x="190" y="588" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="14" fill="#9aa0b5">Un fait, un chiffre, une histoire.</text>
+    <circle cx="145" cy="690" r="24" fill="none" stroke="#e0c07c" stroke-width="2"/>
+    <text x="145" y="698" font-family="Cormorant Garamond, Georgia, serif" font-size="22" fill="#e0c07c" text-anchor="middle">P</text>
+    <text x="190" y="682" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="17" fill="#f4f1ea" font-weight="600">Point</text>
+    <text x="190" y="708" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="14" fill="#9aa0b5">Répète, formulé autrement.</text>
+
+  
+  <rect x="510" y="210" width="810" height="290" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.26"/>
+  <text x="542" y="258" font-family="Cormorant Garamond, Georgia, serif" font-size="24" fill="#f7ecd0">Les 6 outils de persuasion</text>
+  <text x="542" y="300" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Contraste — présente l'option excessive, puis la tienne.</text><text x="542" y="330" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Recadrage de valeur — parle du coût de l'absence de résultat.</text><text x="542" y="360" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Pied dans la porte — micro-accord, puis élargis.</text><text x="542" y="390" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Question qui déplace — ne réponds pas à l'attaque, questionne.</text><text x="542" y="420" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Triple alternative — trois options dont tu acceptes les trois.</text><text x="542" y="450" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Étiquetage émotionnel — nomme l'émotion, elle perd sa force.</text>
+
+  
+  <rect x="510" y="520" width="810" height="290" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#4a7fd4" stroke-opacity="0.26"/>
+  <text x="542" y="568" font-family="Cormorant Garamond, Georgia, serif" font-size="24" fill="#f7ecd0">Voix & silence</text>
+  <text x="542" y="610" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Voix grave — main sur le sternum, descends le ton jusqu'au grave confortable.</text><text x="542" y="642" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Une idée = une phrase. Puis arrête-toi net.</text><text x="542" y="674" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Après chaque question : 3 secondes de silence. Laisse l'autre se livrer.</text><text x="542" y="706" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Zéro mot de remplissage : « euh », « en fait », « genre » → silence.</text><text x="542" y="738" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#b9bfd0">Le premier qui parle après une offre perd souvent l'avantage.</text>
+
+  <text x="1320" y="820" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="14" fill="#6b7189" text-anchor="end">METHOD — Incarne ton Futur Toi</text>
+</svg>

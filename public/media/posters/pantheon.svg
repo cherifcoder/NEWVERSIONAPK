@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0d16"/>
+      <stop offset="100%" stop-color="#05060a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f7ecd0"/>
+      <stop offset="50%" stop-color="#cfa851"/>
+      <stop offset="100%" stop-color="#946d24"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0" r="0.8">
+      <stop offset="0%" stop-color="#cfa851" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#cfa851" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1400" height="900" fill="url(#bg)"/>
+  <rect width="1400" height="900" fill="url(#halo)"/>
+  <g opacity="0.07" stroke="#cfa851" stroke-width="1">
+    <line x1="0" y1="0" x2="0" y2="900"/><line x1="100" y1="0" x2="100" y2="900"/><line x1="200" y1="0" x2="200" y2="900"/><line x1="300" y1="0" x2="300" y2="900"/><line x1="400" y1="0" x2="400" y2="900"/><line x1="500" y1="0" x2="500" y2="900"/><line x1="600" y1="0" x2="600" y2="900"/><line x1="700" y1="0" x2="700" y2="900"/><line x1="800" y1="0" x2="800" y2="900"/><line x1="900" y1="0" x2="900" y2="900"/><line x1="1000" y1="0" x2="1000" y2="900"/><line x1="1100" y1="0" x2="1100" y2="900"/><line x1="1200" y1="0" x2="1200" y2="900"/><line x1="1300" y1="0" x2="1300" y2="900"/>
+    <line x1="0" y1="0" x2="1400" y2="0"/><line x1="0" y1="100" x2="1400" y2="100"/><line x1="0" y1="200" x2="1400" y2="200"/><line x1="0" y1="300" x2="1400" y2="300"/><line x1="0" y1="400" x2="1400" y2="400"/><line x1="0" y1="500" x2="1400" y2="500"/><line x1="0" y1="600" x2="1400" y2="600"/><line x1="0" y1="700" x2="1400" y2="700"/><line x1="0" y1="800" x2="1400" y2="800"/>
+  </g>
+  <rect x="40" y="40" width="1320" height="820" fill="none" stroke="#cfa851" stroke-opacity="0.28" rx="18"/>
+  <text x="80" y="112" font-family="Cormorant Garamond, Georgia, serif" font-size="52" fill="url(#gold)" letter-spacing="1">Panthéon des modèles</text>
+  <text x="80" y="148" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="19" fill="#9aa0b5" letter-spacing="3" text-transform="uppercase">Character Bible · 6 archétypes</text>
+  <line x1="80" y1="172" x2="1320" y2="172" stroke="url(#gold)" stroke-opacity="0.4"/>
+  
+  <rect x="80" y="210" width="390" height="275" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#e0c07c" stroke-opacity="0.26"/>
+    <rect x="80" y="210" width="4" height="275" rx="2" fill="#e0c07c"/>
+    <text x="106" y="258" font-family="Cormorant Garamond, Georgia, serif" font-size="25" fill="#f7ecd0">Le Futur Toi</text>
+    <text x="106" y="300" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Zéro abandon</text><text x="106" y="332" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Décision rapide</text><text x="106" y="364" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Présence calme</text><text x="106" y="396" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Verbe élégant</text>
+  <rect x="500" y="210" width="390" height="275" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#4a7fd4" stroke-opacity="0.26"/>
+    <rect x="500" y="210" width="4" height="275" rx="2" fill="#4a7fd4"/>
+    <text x="526" y="258" font-family="Cormorant Garamond, Georgia, serif" font-size="25" fill="#f7ecd0">Harvey Specter</text>
+    <text x="526" y="300" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Levier informationnel</text><text x="526" y="332" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Sang-froid total</text><text x="526" y="364" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Le silence</text><text x="526" y="396" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Loyauté sélective</text>
+  <rect x="920" y="210" width="390" height="275" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#b4323c" stroke-opacity="0.26"/>
+    <rect x="920" y="210" width="4" height="275" rx="2" fill="#b4323c"/>
+    <text x="946" y="258" font-family="Cormorant Garamond, Georgia, serif" font-size="25" fill="#f7ecd0">Le Stratège de Cour</text>
+    <text x="946" y="300" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Intérêts > émotions</text><text x="946" y="332" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Patience d'arme</text><text x="946" y="364" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Jamais de vanité</text><text x="946" y="396" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Caméléon social</text>
+  <rect x="80" y="510" width="390" height="275" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#2f9e78" stroke-opacity="0.26"/>
+    <rect x="80" y="510" width="4" height="275" rx="2" fill="#2f9e78"/>
+    <text x="106" y="558" font-family="Cormorant Garamond, Georgia, serif" font-size="25" fill="#f7ecd0">Le Neuro-Architecte</text>
+    <text x="106" y="600" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Émotion avant fait</text><text x="106" y="632" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Myélinisation</text><text x="106" y="664" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Réécrire l'habitude</text><text x="106" y="696" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Cohérence cardiaque</text>
+  <rect x="500" y="510" width="390" height="275" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.26"/>
+    <rect x="500" y="510" width="4" height="275" rx="2" fill="#cfa851"/>
+    <text x="526" y="558" font-family="Cormorant Garamond, Georgia, serif" font-size="25" fill="#f7ecd0">Le Polymath</text>
+    <text x="526" y="600" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Travail long</text><text x="526" y="632" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Transfert</text><text x="526" y="664" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Preuve > opinion</text><text x="526" y="696" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Livré, pas presque</text>
+  <rect x="920" y="510" width="390" height="275" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#946d24" stroke-opacity="0.26"/>
+    <rect x="920" y="510" width="4" height="275" rx="2" fill="#946d24"/>
+    <text x="946" y="558" font-family="Cormorant Garamond, Georgia, serif" font-size="25" fill="#f7ecd0">Le Sage de Babylone</text>
+    <text x="946" y="600" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Paye-toi d'abord</text><text x="946" y="632" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Budget strict</text><text x="946" y="664" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Effet composé</text><text x="946" y="696" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="16" fill="#b9bfd0">· Protège la réputation</text>
+  <text x="1320" y="820" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="14" fill="#6b7189" text-anchor="end">METHOD — Incarne ton Futur Toi</text>
+</svg>

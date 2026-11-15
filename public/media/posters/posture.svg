@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0d16"/>
+      <stop offset="100%" stop-color="#05060a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f7ecd0"/>
+      <stop offset="50%" stop-color="#cfa851"/>
+      <stop offset="100%" stop-color="#946d24"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0" r="0.8">
+      <stop offset="0%" stop-color="#cfa851" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#cfa851" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1400" height="900" fill="url(#bg)"/>
+  <rect width="1400" height="900" fill="url(#halo)"/>
+  <g opacity="0.07" stroke="#cfa851" stroke-width="1">
+    <line x1="0" y1="0" x2="0" y2="900"/><line x1="100" y1="0" x2="100" y2="900"/><line x1="200" y1="0" x2="200" y2="900"/><line x1="300" y1="0" x2="300" y2="900"/><line x1="400" y1="0" x2="400" y2="900"/><line x1="500" y1="0" x2="500" y2="900"/><line x1="600" y1="0" x2="600" y2="900"/><line x1="700" y1="0" x2="700" y2="900"/><line x1="800" y1="0" x2="800" y2="900"/><line x1="900" y1="0" x2="900" y2="900"/><line x1="1000" y1="0" x2="1000" y2="900"/><line x1="1100" y1="0" x2="1100" y2="900"/><line x1="1200" y1="0" x2="1200" y2="900"/><line x1="1300" y1="0" x2="1300" y2="900"/>
+    <line x1="0" y1="0" x2="1400" y2="0"/><line x1="0" y1="100" x2="1400" y2="100"/><line x1="0" y1="200" x2="1400" y2="200"/><line x1="0" y1="300" x2="1400" y2="300"/><line x1="0" y1="400" x2="1400" y2="400"/><line x1="0" y1="500" x2="1400" y2="500"/><line x1="0" y1="600" x2="1400" y2="600"/><line x1="0" y1="700" x2="1400" y2="700"/><line x1="0" y1="800" x2="1400" y2="800"/>
+  </g>
+  <rect x="40" y="40" width="1320" height="820" fill="none" stroke="#cfa851" stroke-opacity="0.28" rx="18"/>
+  <text x="80" y="112" font-family="Cormorant Garamond, Georgia, serif" font-size="52" fill="url(#gold)" letter-spacing="1">Le corps qui commande</text>
+  <text x="80" y="148" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="19" fill="#9aa0b5" letter-spacing="3" text-transform="uppercase">Présence physique · micro-gestes</text>
+  <line x1="80" y1="172" x2="1320" y2="172" stroke="url(#gold)" stroke-opacity="0.4"/>
+  
+  
+  <rect x="80" y="210" width="620" height="290" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.26"/>
+  <text x="112" y="258" font-family="Cormorant Garamond, Georgia, serif" font-size="21" fill="#f7ecd0">Le corps qui commande</text>
+  <text x="112" y="296" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">S'asseoir — dos droit, épaules basses, pieds au sol,</text><text x="112" y="322" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">mains visibles. Aucun affalement, jamais.</text><text x="112" y="348" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">Marcher — 20 % plus lentement. Pas posés, regard</text><text x="112" y="374" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">horizontal, mains calmes le long du corps.</text><text x="112" y="400" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">Ouvrir une porte — main ferme, un seul mouvement,</text><text x="112" y="426" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">aucune hésitation. Tu entres, tu ne te glisses pas.</text><text x="112" y="452" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">Tenir un verre — à la base, coude bas, jamais devant</text><text x="112" y="478" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">le visage. Les mains libres pour parler.</text>
+
+  
+  <rect x="80" y="520" width="620" height="290" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#cfa851" stroke-opacity="0.26"/>
+  <text x="112" y="568" font-family="Cormorant Garamond, Georgia, serif" font-size="21" fill="#f7ecd0">Serrer une main & écouter</text>
+  <text x="112" y="606" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">Regard dans les yeux, deux secousses, pression ferme</text><text x="112" y="632" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">mais brève. Tu relâches le premier — c'est toi qui</text><text x="112" y="658" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">contrôles le tempo.</text><text x="112" y="684" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">Écouter — corps orienté vers l'autre, tête légèrement</text><text x="112" y="710" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">inclinée, aucune interruption. Silence actif : tu ne</text><text x="112" y="736" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15.5" fill="#b9bfd0">prépares pas ta réponse, tu absorbes la donnée.</text>
+
+  
+  <rect x="730" y="210" width="590" height="600" rx="16" fill="#ffffff" fill-opacity="0.03" stroke="#4a7fd4" stroke-opacity="0.26"/>
+  <text x="762" y="258" font-family="Cormorant Garamond, Georgia, serif" font-size="21" fill="#f7ecd0">Schéma de présence</text>
+  <!-- silhouette schématique -->
+  <g transform="translate(880, 320)">
+    <circle cx="145" cy="52" r="40" fill="none" stroke="#e0c07c" stroke-width="3"/>
+    <line x1="145" y1="92" x2="145" y2="300" stroke="#e0c07c" stroke-width="3"/>
+    <line x1="60" y1="150" x2="230" y2="150" stroke="#e0c07c" stroke-width="3"/>
+    <line x1="145" y1="300" x2="85" y2="440" stroke="#e0c07c" stroke-width="3"/>
+    <line x1="145" y1="300" x2="205" y2="440" stroke="#e0c07c" stroke-width="3"/>
+    <line x1="60" y1="150" x2="40" y2="250" stroke="#e0c07c" stroke-width="3"/>
+    <line x1="230" y1="150" x2="250" y2="250" stroke="#e0c07c" stroke-width="3"/>
+    <line x1="60" y1="150" x2="40" y2="250" stroke="#cfa851" stroke-width="1" opacity="0.4"/>
+    <line x1="105" y1="44" x2="105" y2="10" stroke="#4a7fd4" stroke-width="2"/>
+    <line x1="185" y1="44" x2="185" y2="10" stroke="#4a7fd4" stroke-width="2"/>
+    <text x="145" y="480" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="14" fill="#9aa0b5" text-anchor="middle">Axe vertical · menton parallèle au sol</text>
+  </g>
+  <text x="762" y="740" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#9aa0b5">Le personnage s'installe par le corps</text>
+  <text x="762" y="764" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="15" fill="#9aa0b5">avant de s'installer dans la tête.</text>
+
+  <text x="1320" y="820" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="14" fill="#6b7189" text-anchor="end">METHOD — Incarne ton Futur Toi</text>
+</svg>
