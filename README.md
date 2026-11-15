@@ -13,13 +13,13 @@ Aucune donnée ne quitte ton téléphone.
 | Source | Lien |
 | --- | --- |
 | **Dernière version (GitHub Releases)** | https://github.com/cherifcoder/NEWVERSIONAPK/releases/latest |
-| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.0.0-apk* |
+| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.1.0-apk* |
 
-**Fichier :** `METHOD-1.0.0.apk` (~5,8 Mo) — min. Android 7.0 (API 24).
+**Fichier :** `METHOD-1.1.0.apk` — min. Android 7.0 (API 24).
 
 ### Installation sur le téléphone
 
-1. Télécharge `METHOD-1.0.0.apk` sur ton téléphone.
+1. Télécharge `METHOD-1.1.0.apk` sur ton téléphone.
 2. Ouvre le fichier (Gestionnaire de fichiers → *Téléchargements*).
 3. Android affiche un avertissement : autorise **« Installer des applications inconnues »**
    pour ton navigateur / gestionnaire de fichiers.
@@ -154,9 +154,11 @@ Le workflow `.github/workflows/android.yml` construit l'APK signé à chaque
 lors d'un tag `v*` :
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.1.0
+git push origin v1.1.0
 ```
+
+L'APK est nommé d'après la version : `METHOD-1.1.0.apk`.
 
 ### Signature
 

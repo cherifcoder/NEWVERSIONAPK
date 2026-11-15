@@ -81,14 +81,25 @@ jobs:
           chmod +x ./gradlew
           ./gradlew assembleRelease --no-daemon
 
+      - name: Compute version
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="$(grep -m1 '"version"' package.json | sed -E 's/.*"version": *"([^"]+)".*/\1/')"
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "APK_NAME=METHOD-${VERSION}.apk" >> "$GITHUB_ENV"
+          echo "APK name: METHOD-${VERSION}.apk"
+
       - name: Rename APK
-        run: cp android/app/build/outputs/apk/release/app-release.apk METHOD-1.0.0.apk
+        run: cp android/app/build/outputs/apk/release/app-release.apk "$APK_NAME"
 
       - name: Upload APK as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: METHOD-1.0.0-apk
-          path: METHOD-1.0.0.apk
+          name: METHOD-${{ env.VERSION }}-apk
+          path: ${{ env.APK_NAME }}
           if-no-files-found: error
 
       - name: Publish GitHub Release
@@ -96,5 +107,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: METHOD ${{ github.ref_name }}
-          files: METHOD-1.0.0.apk
+          files: ${{ env.APK_NAME }}
           generate_release_notes: true
