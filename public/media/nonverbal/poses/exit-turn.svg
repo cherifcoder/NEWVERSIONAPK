@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="900" height="900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b0d16"/>
+      <stop offset="100%" stop-color="#05060a"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.1" r="0.7">
+      <stop offset="0%" stop-color="#cfa851" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#cfa851" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="100" height="100" fill="url(#bg)"/>
+  <rect width="100" height="100" fill="url(#halo)"/>
+  
+  <g>
+    
+  <g stroke="rgba(154,160,181,0.55)" fill="none" stroke-width="2.6" stroke-linejoin="round">
+    <rect x="66" y="20" width="24" height="66" rx="1.5"/>
+    <line x1="78" y1="20" x2="78" y2="86" stroke="rgba(154,160,181,0.18)"/>
+    <path d="M66 24 A 20 20 0 0 1 62 60" stroke="rgba(207,168,81,0.28)" stroke-dasharray="3 3"/>
+  </g>
+  <circle cx="86" cy="53" r="1.6" fill="#cfa851"/>
+    
+    <line x1="6" y1="88" x2="94" y2="88" stroke="rgba(207,168,81,0.22)" stroke-width="1.6"/>
+    <!-- membres éloignés (arrière-plan) -->
+    <polyline points="47.8,58 47.42,68.79 45.92,79.49" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="43.52,79.49 48.72,79.49" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="45.6,40.84 43.01,49.87 38.61,57.49" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="38.61" cy="57.49" r="1.7" fill="rgba(244,241,234,0.42)" />
+    <!-- buste + tête -->
+    <polyline points="50.59,41.01 50,58" fill="none" stroke="#f4f1ea" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="49.67" cy="32.26" r="5.4" fill="none" stroke="#f4f1ea" stroke-width="3.432"/>
+    <!-- membres proches (premier plan) -->
+    <polyline points="52.2,58 54.45,68.56 55.57,79.3" fill="none" stroke="#f4f1ea" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="52.97,79.3 58.77,79.3" fill="none" stroke="#f4f1ea" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="55.59,41.18 57.22,50.44 60.23,58.71" fill="none" stroke="#f4f1ea" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="60.23" cy="58.71" r="1.9" fill="#cfa851" />
+  </g>
+  <text x="50" y="8" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="6" fill="#f7ecd0">Sortir d'une pièce</text>
+  <text x="50" y="13.5" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="3.4" fill="#9aa0b5">Se lever, saluer d'un regard, tourner les épaules en dernier. Pas de fuite.</text>
+</svg>

@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { defaultState, DEMO_TASKS } from '../data/defaults'
+import { defaultState, defaultNonverbal, DEMO_TASKS } from '../data/defaults'
 import { PILLARS, emptyPillars } from '../data/tracks'
 import { hashPin, verifyPin as verifyPinHash } from '../lib/crypto'
 import {
@@ -19,6 +19,7 @@ import {
   saveState,
   wipeAll,
 } from '../lib/storage'
+import { XP_PER_STEP, bumpDailyLog, scheduleReview } from '../lib/curriculum'
 import { clamp, dayKey, daysBetween, sum, uid } from '../lib/utils'
 
 const AppContext = createContext(null)
@@ -361,6 +362,72 @@ export function AppProvider({ children }) {
     })
   }, [])
 
+  /* --- Communication non verbale (module 11) ---
+     Chaque action garantit l'existence de `nonverbal` (états importés
+     d'anciennes sauvegardes ou créés avant l'ajout du module). */
+  const nvPatch = (s, fn) => ({ ...s, nonverbal: fn(s.nonverbal || defaultNonverbal()) })
+
+  const nvCompleteStep = useCallback((lessonId, stepId) => {
+    setState((s) =>
+      nvPatch(s, (nv) => {
+        const entry = nv.progress[lessonId] || { done: false, stepsDone: [], attempts: 0 }
+        if (entry.stepsDone.includes(stepId)) return nv
+        return {
+          ...nv,
+          xp: (nv.xp || 0) + XP_PER_STEP,
+          progress: {
+            ...nv.progress,
+            [lessonId]: { ...entry, stepsDone: [...entry.stepsDone, stepId], attempts: (entry.attempts || 0) + 1 },
+          },
+        }
+      }),
+    )
+  }, [])
+
+  const nvCompleteLesson = useCallback((lessonId, { xp = 0, minutes = 0 } = {}) => {
+    setState((s) =>
+      nvPatch(s, (nv) => {
+        const entry = nv.progress[lessonId] || { done: false, stepsDone: [], attempts: 0 }
+        const already = Boolean(entry.done)
+        return {
+          ...nv,
+          xp: (nv.xp || 0) + (already ? 0 : xp),
+          progress: {
+            ...nv.progress,
+            [lessonId]: { ...entry, done: true, completedAt: entry.completedAt || new Date().toISOString() },
+          },
+          log: already ? nv.log : bumpDailyLog(nv.log, { lessons: 1, minutes, xp }),
+        }
+      }),
+    )
+  }, [])
+
+  const nvRecordReview = useCallback((itemId, correct = true) => {
+    setState((s) => nvPatch(s, (nv) => ({ ...nv, reviews: scheduleReview(nv.reviews, itemId, correct) })))
+  }, [])
+
+  const nvMarkDownload = useCallback((mediaId, info) => {
+    setState((s) => nvPatch(s, (nv) => ({ ...nv, downloads: { ...nv.downloads, [mediaId]: info } })))
+  }, [])
+
+  const nvUnmarkDownload = useCallback((mediaId) => {
+    setState((s) =>
+      nvPatch(s, (nv) => {
+        const next = { ...nv.downloads }
+        delete next[mediaId]
+        return { ...nv, downloads: next }
+      }),
+    )
+  }, [])
+
+  const nvSetDailyGoal = useCallback((dailyGoal) => {
+    setState((s) => nvPatch(s, (nv) => ({ ...nv, dailyGoal: Math.max(1, Number(dailyGoal) || 3) })))
+  }, [])
+
+  const nvResetProgress = useCallback(() => {
+    setState((s) => nvPatch(s, (nv) => ({ ...nv, xp: 0, progress: {}, reviews: {}, log: {} })))
+  }, [])
+
   /* --- Réglages / Profil / Sécurité --- */
   const updateSettings = useCallback((patch) => {
     setState((s) => ({ ...s, settings: { ...s.settings, ...patch } }))
@@ -510,6 +577,13 @@ export function AppProvider({ children }) {
       setEnglishLevel,
       markMedia,
       unmarkMedia,
+      nvCompleteStep,
+      nvCompleteLesson,
+      nvRecordReview,
+      nvMarkDownload,
+      nvUnmarkDownload,
+      nvSetDailyGoal,
+      nvResetProgress,
       updateSettings,
       updateProfile,
       updateSecurity,
@@ -551,6 +625,13 @@ export function AppProvider({ children }) {
       setEnglishLevel,
       markMedia,
       unmarkMedia,
+      nvCompleteStep,
+      nvCompleteLesson,
+      nvRecordReview,
+      nvMarkDownload,
+      nvUnmarkDownload,
+      nvSetDailyGoal,
+      nvResetProgress,
       updateSettings,
       updateProfile,
       updateSecurity,

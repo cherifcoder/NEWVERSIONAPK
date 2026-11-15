@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="900" height="900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b0d16"/>
+      <stop offset="100%" stop-color="#05060a"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.1" r="0.7">
+      <stop offset="0%" stop-color="#cfa851" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#cfa851" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="100" height="100" fill="url(#bg)"/>
+  <rect width="100" height="100" fill="url(#halo)"/>
+  
+  <g>
+    
+  <g stroke="rgba(154,160,181,0.55)" fill="none" stroke-width="2.6" stroke-linecap="round">
+    <line x1="42" y1="60" x2="66" y2="60"/>
+    <line x1="64" y1="60" x2="64" y2="34"/>
+    <line x1="42" y1="60" x2="42" y2="82"/>
+    <line x1="66" y1="60" x2="66" y2="82"/>
+  </g>
+  <g stroke="rgba(154,160,181,0.55)" fill="none" stroke-width="2.6" stroke-linecap="round">
+    <line x1="30" y1="52" x2="82" y2="52"/>
+    <line x1="36" y1="52" x2="36" y2="82"/>
+    <line x1="76" y1="52" x2="76" y2="82"/>
+  </g>
+    <line x1="49.47" y1="29.13" x2="52" y2="88"
+         stroke="#cfa851" stroke-width="1.3" stroke-dasharray="5 4" opacity="0.7"/>
+       <line x1="41.47" y1="36.53" x2="57.47" y2="36.53"
+         stroke="rgba(207,168,81,0.28)" stroke-width="1.2" opacity="0.9"/>
+    <line x1="6" y1="88" x2="94" y2="88" stroke="rgba(207,168,81,0.22)" stroke-width="1.6"/>
+    <!-- membres éloignés (arrière-plan) -->
+    <polyline points="49.8,62 58.02,65.66 66.93,66.91" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="64.53,66.91 69.73,66.91" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="45.45,45.59 42.86,54.63 38.46,62.25" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="38.46" cy="62.25" r="1.7" fill="rgba(244,241,234,0.42)" />
+    <!-- buste + tête -->
+    <polyline points="50.22,45.09 52,62" fill="none" stroke="#f4f1ea" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="49.47" cy="36.53" r="5.4" fill="none" stroke="#f4f1ea" stroke-width="3.432"/>
+    <!-- membres proches (premier plan) -->
+    <polyline points="54.2,62 62.76,64.78 71.71,65.72" fill="none" stroke="#f4f1ea" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="69.11,65.72 74.91,65.72" fill="none" stroke="#f4f1ea" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="55,44.59 60.25,52.38 68.79,54.51" fill="none" stroke="#f4f1ea" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="68.79" cy="54.51" r="1.9" fill="#cfa851" />
+  </g>
+  <text x="50" y="8" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="6" fill="#f7ecd0">Posture assise</text>
+  <text x="50" y="13.5" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="3.4" fill="#9aa0b5">Dos droit sans raideur, avant-bras sur la table, pieds à plat, mains visibles.</text>
+</svg>

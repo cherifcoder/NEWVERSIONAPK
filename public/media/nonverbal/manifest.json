@@ -1,0 +1,271 @@
+{
+  "generatedAt": "2026-11-15T06:51:13.492Z",
+  "note": "Médias du module non verbal — générés localement, aucune API.",
+  "downloadable": {
+    "count": 16,
+    "audioBytes": 1469774,
+    "textBytes": 12329,
+    "totalBytes": 1482103
+  },
+  "inline": {
+    "poses": 12,
+    "clips": 7,
+    "note": "Illustrations et mini-vidéos vectorielles : embarquées dans le bundle, 0 octet à télécharger."
+  },
+  "files": [
+    {
+      "path": "media/nonverbal/audio/cadence-lente.wav",
+      "bytes": 484044
+    },
+    {
+      "path": "media/nonverbal/audio/cadence-parole.wav",
+      "bytes": 484043
+    },
+    {
+      "path": "media/nonverbal/audio/souffle-345.wav",
+      "bytes": 296044
+    },
+    {
+      "path": "media/nonverbal/audio/appui-syllabes.wav",
+      "bytes": 205643
+    },
+    {
+      "path": "media/nonverbal/texts/scr-entrer.txt",
+      "bytes": 1658
+    },
+    {
+      "path": "media/nonverbal/texts/scr-assise.txt",
+      "bytes": 1399
+    },
+    {
+      "path": "media/nonverbal/texts/scr-saluer.txt",
+      "bytes": 1304
+    },
+    {
+      "path": "media/nonverbal/texts/scr-presenter.txt",
+      "bytes": 1243
+    },
+    {
+      "path": "media/nonverbal/texts/scr-elocution.txt",
+      "bytes": 1474
+    },
+    {
+      "path": "media/nonverbal/texts/scr-service.txt",
+      "bytes": 1366
+    },
+    {
+      "path": "media/nonverbal/texts/scr-sortir.txt",
+      "bytes": 1138
+    },
+    {
+      "path": "media/nonverbal/texts/fiche-observation.txt",
+      "bytes": 844
+    },
+    {
+      "path": "media/nonverbal/texts/drill-virelangue-1.txt",
+      "bytes": 483
+    },
+    {
+      "path": "media/nonverbal/texts/drill-virelangue-2.txt",
+      "bytes": 474
+    },
+    {
+      "path": "media/nonverbal/texts/drill-projection.txt",
+      "bytes": 502
+    },
+    {
+      "path": "media/nonverbal/texts/drill-respiration.txt",
+      "bytes": 444
+    },
+    {
+      "path": "media/nonverbal/poses/stand-neutral.svg",
+      "bytes": 2946
+    },
+    {
+      "path": "media/nonverbal/poses/enter-stop.svg",
+      "bytes": 3349
+    },
+    {
+      "path": "media/nonverbal/poses/enter-scan.svg",
+      "bytes": 3621
+    },
+    {
+      "path": "media/nonverbal/poses/seat-upright.svg",
+      "bytes": 3274
+    },
+    {
+      "path": "media/nonverbal/poses/handshake.svg",
+      "bytes": 2707
+    },
+    {
+      "path": "media/nonverbal/poses/present-open.svg",
+      "bytes": 2856
+    },
+    {
+      "path": "media/nonverbal/poses/listen-active.svg",
+      "bytes": 2510
+    },
+    {
+      "path": "media/nonverbal/poses/speak-gesture.svg",
+      "bytes": 2636
+    },
+    {
+      "path": "media/nonverbal/poses/ask-service.svg",
+      "bytes": 2750
+    },
+    {
+      "path": "media/nonverbal/poses/exit-turn.svg",
+      "bytes": 2892
+    },
+    {
+      "path": "media/nonverbal/poses/breath-low.svg",
+      "bytes": 2503
+    },
+    {
+      "path": "media/nonverbal/poses/walk-slow.svg",
+      "bytes": 2709
+    },
+    {
+      "path": "media/nonverbal/clips/clip-enter.svg",
+      "bytes": 9076
+    },
+    {
+      "path": "media/nonverbal/clips/clip-walk.svg",
+      "bytes": 5187
+    },
+    {
+      "path": "media/nonverbal/clips/clip-seat.svg",
+      "bytes": 5274
+    },
+    {
+      "path": "media/nonverbal/clips/clip-handshake.svg",
+      "bytes": 5067
+    },
+    {
+      "path": "media/nonverbal/clips/clip-exit.svg",
+      "bytes": 5354
+    },
+    {
+      "path": "media/nonverbal/clips/clip-elocution.svg",
+      "bytes": 7156
+    },
+    {
+      "path": "media/nonverbal/clips/clip-service.svg",
+      "bytes": 4765
+    }
+  ],
+  "declared": [
+    {
+      "id": "aud-cadence-lente",
+      "kind": "audio",
+      "src": "media/nonverbal/audio/cadence-lente.wav",
+      "declaredBytes": 480000,
+      "actualBytes": 484044
+    },
+    {
+      "id": "aud-cadence-parole",
+      "kind": "audio",
+      "src": "media/nonverbal/audio/cadence-parole.wav",
+      "declaredBytes": 480000,
+      "actualBytes": 484043
+    },
+    {
+      "id": "aud-souffle-345",
+      "kind": "audio",
+      "src": "media/nonverbal/audio/souffle-345.wav",
+      "declaredBytes": 380000,
+      "actualBytes": 296044
+    },
+    {
+      "id": "aud-appui-syllabes",
+      "kind": "audio",
+      "src": "media/nonverbal/audio/appui-syllabes.wav",
+      "declaredBytes": 320000,
+      "actualBytes": 205643
+    },
+    {
+      "id": "txt-scr-entrer",
+      "kind": "text",
+      "src": "media/nonverbal/texts/scr-entrer.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 1658
+    },
+    {
+      "id": "txt-scr-assise",
+      "kind": "text",
+      "src": "media/nonverbal/texts/scr-assise.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 1399
+    },
+    {
+      "id": "txt-scr-saluer",
+      "kind": "text",
+      "src": "media/nonverbal/texts/scr-saluer.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 1304
+    },
+    {
+      "id": "txt-scr-presenter",
+      "kind": "text",
+      "src": "media/nonverbal/texts/scr-presenter.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 1243
+    },
+    {
+      "id": "txt-scr-elocution",
+      "kind": "text",
+      "src": "media/nonverbal/texts/scr-elocution.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 1474
+    },
+    {
+      "id": "txt-scr-service",
+      "kind": "text",
+      "src": "media/nonverbal/texts/scr-service.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 1366
+    },
+    {
+      "id": "txt-scr-sortir",
+      "kind": "text",
+      "src": "media/nonverbal/texts/scr-sortir.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 1138
+    },
+    {
+      "id": "txt-fiche-observation",
+      "kind": "text",
+      "src": "media/nonverbal/texts/fiche-observation.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 844
+    },
+    {
+      "id": "txt-drill-virelangue-1",
+      "kind": "text",
+      "src": "media/nonverbal/texts/drill-virelangue-1.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 483
+    },
+    {
+      "id": "txt-drill-virelangue-2",
+      "kind": "text",
+      "src": "media/nonverbal/texts/drill-virelangue-2.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 474
+    },
+    {
+      "id": "txt-drill-projection",
+      "kind": "text",
+      "src": "media/nonverbal/texts/drill-projection.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 502
+    },
+    {
+      "id": "txt-drill-respiration",
+      "kind": "text",
+      "src": "media/nonverbal/texts/drill-respiration.txt",
+      "declaredBytes": 4096,
+      "actualBytes": 444
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   registry.js — Cartographie des 10 modules de l'application
+   registry.js — Cartographie des 11 modules de l'application
 ------------------------------------------------------------------- */
 import Dashboard from './Dashboard'
 import CharacterBible from './CharacterBible'
@@ -10,6 +10,7 @@ import PillarsTracker from './PillarsTracker'
 import ActorJournal from './ActorJournal'
 import AiDirector from './AiDirector'
 import MediaLibrary from './MediaLibrary'
+import NonverbalAcademy from './nonverbal/NonverbalAcademy'
 import SettingsPanel from './SettingsPanel'
 
 export const MODULES = [
@@ -96,6 +97,16 @@ export const MODULES = [
     subtitle: 'Finir ce qu\'on commence — une boucle ouverte à la fois',
     icon: 'Swords',
     Component: ZeroAbandon,
+    group: 'incarnation',
+  },
+  {
+    id: 'nonverbal',
+    label: 'Communication non verbale',
+    short: 'Non-verbal',
+    title: 'Académie du non-verbal',
+    subtitle: 'Entrer, s\'asseoir, saluer, se présenter, prendre la parole — micro-leçons et postures vectorielles',
+    icon: 'PersonStanding',
+    Component: NonverbalAcademy,
     group: 'incarnation',
   },
   {

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs><style>
+    .fig { opacity: 0; }
+    
+      .fr0 { animation: fr0 5.6s infinite; }
+      @keyframes fr0 {
+        0% { opacity: 0; } 0% { opacity: 0; }
+        6% { opacity: 1; }
+        44% { opacity: 1; }
+        50% { opacity: 0; } 100% { opacity: 0; }
+      }
+
+      .fr1 { animation: fr1 5.6s infinite; }
+      @keyframes fr1 {
+        0% { opacity: 0; } 50% { opacity: 0; }
+        56% { opacity: 1; }
+        94% { opacity: 1; }
+        100% { opacity: 0; } 100% { opacity: 0; }
+      }
+    .dt0 { opacity: 0.25; animation: dt0 5.6s infinite; }
+      @keyframes dt0 { 0%,0% { opacity: 0.25; } 3.57% { opacity: 1; } 50%,100% { opacity: 0.25; } }
+.dt1 { opacity: 0.25; animation: dt1 5.6s infinite; }
+      @keyframes dt1 { 0%,50% { opacity: 0.25; } 53.57% { opacity: 1; } 100%,100% { opacity: 0.25; } }
+    .bar { animation: bar 5.6s linear infinite; }
+    @keyframes bar { from { width: 0; } to { width: 64px; } }
+  </style></defs>
+  <g class="fr0">
+  <g>
+    
+  <g stroke="rgba(154,160,181,0.55)" fill="none" stroke-width="2.6" stroke-linejoin="round">
+    <rect x="66" y="20" width="24" height="66" rx="1.5"/>
+    <line x1="78" y1="20" x2="78" y2="86" stroke="rgba(154,160,181,0.18)"/>
+    <path d="M66 24 A 20 20 0 0 1 62 60" stroke="rgba(207,168,81,0.28)" stroke-dasharray="3 3"/>
+  </g>
+  <circle cx="86" cy="53" r="1.6" fill="#cfa851"/>
+    
+    <line x1="6" y1="88" x2="94" y2="88" stroke="rgba(207,168,81,0.22)" stroke-width="1.6"/>
+    <!-- membres éloignés (arrière-plan) -->
+    <polyline points="47.8,58 47.42,68.79 45.92,79.49" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="43.52,79.49 48.72,79.49" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="45.6,40.84 43.01,49.87 38.61,57.49" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="38.61" cy="57.49" r="1.7" fill="rgba(244,241,234,0.42)" />
+    <!-- buste + tête -->
+    <polyline points="50.59,41.01 50,58" fill="none" stroke="#f4f1ea" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="49.67" cy="32.26" r="5.4" fill="none" stroke="#f4f1ea" stroke-width="3.432"/>
+    <!-- membres proches (premier plan) -->
+    <polyline points="52.2,58 54.45,68.56 55.57,79.3" fill="none" stroke="#f4f1ea" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="52.97,79.3 58.77,79.3" fill="none" stroke="#f4f1ea" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="55.59,41.18 57.22,50.44 60.23,58.71" fill="none" stroke="#f4f1ea" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="60.23" cy="58.71" r="1.9" fill="#cfa851" />
+  </g></g><g class="fr1">
+  <g>
+    
+  <g stroke="#cfa851" fill="none" stroke-width="1.6" stroke-dasharray="3 3" opacity="0.8">
+    <line x1="56" y1="30" x2="86" y2="30"/>
+  </g>
+  <circle cx="88" cy="30" r="2.2" fill="#cfa851" />
+    <line x1="49.1" y1="24.82" x2="50" y2="88"
+         stroke="#cfa851" stroke-width="1.3" stroke-dasharray="5 4" opacity="0.7"/>
+       <line x1="41.1" y1="32.22" x2="57.1" y2="32.22"
+         stroke="rgba(207,168,81,0.28)" stroke-width="1.2" opacity="0.9"/>
+    <line x1="6" y1="88" x2="94" y2="88" stroke="rgba(207,168,81,0.22)" stroke-width="1.6"/>
+    <!-- membres éloignés (arrière-plan) -->
+    <polyline points="47.8,58 46.86,68.76 46.48,79.55" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="44.08,79.55 49.28,79.55" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="44.41,41.18 42.78,50.44 40.35,58.9" fill="none" stroke="rgba(244,241,234,0.42)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="40.35" cy="58.9" r="1.7" fill="rgba(244,241,234,0.42)" />
+    <!-- buste + tête -->
+    <polyline points="49.41,41.01 50,58" fill="none" stroke="#f4f1ea" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="49.1" cy="32.22" r="5.4" fill="none" stroke="#f4f1ea" stroke-width="3.432"/>
+    <!-- membres proches (premier plan) -->
+    <polyline points="52.2,58 53.14,68.76 53.52,79.55" fill="none" stroke="#f4f1ea" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="50.92,79.55 56.72,79.55" fill="none" stroke="#f4f1ea" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+    <polyline points="54.4,40.84 56.04,50.09 58.46,58.55" fill="none" stroke="#f4f1ea" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="58.46" cy="58.55" r="1.9" fill="#cfa851" />
+  </g></g>
+  <text x="22" y="98" font-family="Inter, system-ui, sans-serif" font-size="5" fill="#9aa0b5">Terminer · saluer · partir</text>
+  <circle class="dt0" cx="22" cy="92" r="1.8" fill="#cfa851"/><circle class="dt1" cx="29" cy="92" r="1.8" fill="#cfa851"/>
+  <rect x="22" y="86" width="0" height="1.4" fill="#cfa851" class="bar" rx="0.7"/>
+</svg>

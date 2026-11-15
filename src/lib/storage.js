@@ -111,6 +111,14 @@ export const mergeImported = (imported, defaults) => {
     security: { ...defaults.security, ...(incoming.security || {}) },
     pillars: { ...defaults.pillars, ...(incoming.pillars || {}) },
     media: { ...defaults.media, ...(incoming.media || {}) },
+    nonverbal: {
+      ...(defaults.nonverbal || {}),
+      ...(incoming.nonverbal || {}),
+      progress: { ...(defaults.nonverbal?.progress || {}), ...(incoming.nonverbal?.progress || {}) },
+      reviews: { ...(defaults.nonverbal?.reviews || {}), ...(incoming.nonverbal?.reviews || {}) },
+      downloads: { ...(defaults.nonverbal?.downloads || {}), ...(incoming.nonverbal?.downloads || {}) },
+      log: { ...(defaults.nonverbal?.log || {}), ...(incoming.nonverbal?.log || {}) },
+    },
   }
 }
 

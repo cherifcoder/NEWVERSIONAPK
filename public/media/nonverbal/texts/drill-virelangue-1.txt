@@ -1,0 +1,16 @@
+METHOD — Virelangue — consonnes d'attaque
+=========================================
+Fondation · 45 s · 60 BPM
+
+TEXTE
+  Les chaussettes de l'archiduchesse sont-elles sèches, archi-sèches ?
+
+CONSIGNE
+  Un mot par battement du métronome 60 BPM. Les consonnes claquent, les voyelles restent ouvertes.
+
+CRITÈRES DE RÉUSSITE
+  ✓ Aucune syllabe avalée
+  ✓ Fin de phrase entendue au dernier rang
+  ✓ Deux respirations placées aux virgules
+
+METHOD — Incarne ton Futur Toi

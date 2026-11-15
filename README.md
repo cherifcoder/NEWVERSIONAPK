@@ -39,12 +39,37 @@ Aucune donnée ne quitte ton téléphone.
 | 2 | **Panthéon des Modèles** | Character Bible : archétypes & figures d'élite à incarner |
 | 3 | **Éloquence · Négociation · Anglais** | Drills de prise de parole, répliques, vocabulaire |
 | 4 | **Dispatcher « Zéro Abandon »** | Décompose une ambition en actions immédiates |
-| 5 | **Gym Quotidien des Mentors** | Exercices mentaux et physiques quotidiens |
-| 6 | **Tracker des Piliers** | Deep Work chronométré, régularité, séries |
-| 7 | **Journal de l'Acteur** | Journal de bord, humeur, insights, prompts |
-| 8 | **Le Metteur en Scène** (Agent IA) | Rapport d'analyse personnalisé, moteur local **ou** API LLM |
-| 9 | **Médiathèque** | Ressources audio / vidéo / texte téléchargeables **hors-ligne** |
-| 10 | **Réglages** | Profil, sécurité (PIN), IA, export / import, réinitialisation |
+| 5 | **Académie du non-verbal** | Entrer, s'asseoir, saluer, se présenter, parler, sortir — micro-leçons, postures vectorielles, audio hors-ligne |
+| 6 | **Gym Quotidien des Mentors** | Exercices mentaux et physiques quotidiens |
+| 7 | **Tracker des Piliers** | Deep Work chronométré, régularité, séries |
+| 8 | **Journal de l'Acteur** | Journal de bord, humeur, insights, prompts |
+| 9 | **Le Metteur en Scène** (Agent IA) | Rapport d'analyse personnalisé, moteur local **ou** API LLM |
+| 10 | **Médiathèque** | Ressources audio / vidéo / texte téléchargeables **hors-ligne** |
+| 11 | **Réglages** | Profil, sécurité (PIN), IA, export / import, réinitialisation |
+
+### Académie du non-verbal (module 11)
+
+Micro-learning à la Duolingo/Busuu pour la **communication non verbale** :
+**3 unités · 9 leçons · 44 étapes**, une leçon de 3 à 6 minutes, une étape à
+la fois, sans mécanique de « vies ».
+
+- **Situations couvertes** : entrer dans une pièce et s'arrêter calmement ·
+  balayer la pièce · posture assise · saluer et serrer la main · se présenter
+  en 20 s · lecture à voix haute / élocution · demander un service · sortir
+  d'une pièce.
+- **Illustrations & mini-vidéos vectorielles** : dessinées par un moteur SVG
+  paramétrique (`src/lib/figure.js`, 12 postures + 7 séquences animées) →
+  **0 octet à télécharger**, nettes à toute résolution.
+- **Hors-ligne** : audio (métronomes, souffle 3-4-5, appuis de syllabes) et
+  textes (scénarios, fiche, exercices) **téléchargeables** (~1,45 Mo pour tout
+  le cours). File d'attente persistante, reprise après coupure, vérification
+  d'espace.
+- **Régularité, pas punition** : XP, niveaux, série de jours et **répétition
+  espacée** des questions (1 → 3 → 7 → 21 → 60 jours).
+
+📄 Détails techniques (modèle de données, stratégie hors-ligne, moteur SVG,
+génération 100 % locale) : **[docs/MODULE_NON_VERBAL.md](docs/MODULE_NON_VERBAL.md)**.
+
 
 ### Agent IA « Le Metteur en Scène »
 
@@ -59,9 +84,11 @@ Aucune donnée ne quitte ton téléphone.
 ## 🔐 Vie privée
 
 - Toutes les données restent **sur l'appareil** (`localStorage`, clé `method.state.v1`).
-- Médias hors-ligne en **Cache Storage** (`method-media-v1`) via service worker.
+- Médias hors-ligne : **Cache Storage** (`method-media-v1`) sur le web, dossier
+  applicatif natif (`Directory.Data`) dans l'APK via `@capacitor/filesystem`.
 - Aucun compte, aucun tracking, aucun serveur propriétaire.
-- **Export / Import** JSON dans *Réglages* pour sauvegarder ou transférer.
+- **Export / Import** JSON dans *Réglages* pour sauvegarder ou transférer
+  (inclut la progression du module non-verbal).
 
 ---
 
@@ -88,8 +115,9 @@ npm run lint      # oxlint
 ### Régénérer les ressources hors-ligne
 
 ```bash
-node scripts/generate-media.mjs   # posters SVG, audio WAV, textes
-node scripts/generate-icons.mjs   # icônes + splash (PNG depuis public/logo.svg)
+node scripts/generate-media.mjs        # posters SVG, audio WAV, textes
+node scripts/generate-nonverbal.mjs    # module 11 : audio, textes, postures et clips SVG
+node scripts/generate-icons.mjs        # icônes + splash (PNG depuis public/logo.svg)
 npx capacitor-assets generate --android   # distribue icônes/splash dans android/
 ```
 
@@ -143,16 +171,20 @@ Clé destinée à la **distribution personnelle** — remplace-la avant toute pu
 ```
 src/
   components/     Logo, LockScreen, PinKeypad, Onboarding, Shell, UI primitives
+                  + nonverbal/ (Visuals, Steps)
   context/        AppContext (état global, persistance, PIN, rollover de jour)
   data/           tracks, archetypes, wisdom, exercises, eloquence, english, resources…
+                  + nonverbal/ (curriculum, media, scripts)
   hooks/          useDeepWorkTimer
-  lib/            aiAgent, crypto (PIN), storage (localStorage/cache/export), utils
-  modules/        les 10 modules + registry.js
+  lib/            aiAgent, crypto (PIN), storage, utils
+                  + figure (moteur SVG), curriculum, offlineMedia
+  modules/        les 11 modules + registry.js (+ nonverbal/)
 public/
   sw.js           service worker (shell hors-ligne + cache médias)
-  media/          ressources générées (posters, audio, textes)
+  media/          ressources générées (posters, audio, textes, nonverbal/)
   logo.svg
-scripts/          generate-media.mjs, generate-icons.mjs
+docs/             MODULE_NON_VERBAL.md (architecture du module 11)
+scripts/          generate-media.mjs, generate-nonverbal.mjs, generate-icons.mjs
 android/          projet Capacitor natif
 .github/          workflow de build APK
 ```

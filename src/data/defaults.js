@@ -7,6 +7,25 @@ import { dayKey, uid } from '../lib/utils'
 
 export const APP_VERSION = 1
 
+/* ------------------------------------------------------------------
+   Module 11 — Communication non verbale
+   Tout l'état vit dans un seul objet `nonverbal` pour que l'export /
+   import de sauvegarde le couvre automatiquement, sans code dédié.
+------------------------------------------------------------------- */
+export const defaultNonverbal = () => ({
+  version: 1,
+  xp: 0,
+  dailyGoal: 3,
+  // { [lessonId]: { done, stepsDone: [], attempts, completedAt } }
+  progress: {},
+  // { 'lessonId:stepId': { box, due, lastAt } } — répétition espacée
+  reviews: {},
+  // { [mediaId]: { bytes, mode, downloadedAt, version } }
+  downloads: {},
+  // { 'YYYY-MM-DD': { lessons, minutes, xp } }
+  log: {},
+})
+
 export const defaultState = () => ({
   schema: APP_VERSION,
   createdAt: new Date().toISOString(),
@@ -91,6 +110,9 @@ export const defaultState = () => ({
 
   // Bibliothèque hors-ligne
   media: {}, // { [resourceId]: { url, size, downloadedAt } }
+
+  // Communication non verbale (module 11)
+  nonverbal: defaultNonverbal(),
 
   streak: { current: 0, best: 0, lastDay: null, freezes: 0 },
 

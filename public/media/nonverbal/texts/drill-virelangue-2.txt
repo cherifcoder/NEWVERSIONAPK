@@ -1,0 +1,16 @@
+METHOD — Virelangue — groupes consonantiques
+============================================
+Intermédiaire · 45 s · 60 BPM
+
+TEXTE
+  Un chasseur sachant chasser doit savoir chasser sans son chien.
+
+CONSIGNE
+  Même cadence, mais on marque la ponctuation par une pause réelle d'une demi-seconde.
+
+CRITÈRES DE RÉUSSITE
+  ✓ Pause visible aux virgules
+  ✓ Volume constant du début à la fin
+  ✓ Aucun essoufflement en fin de phrase
+
+METHOD — Incarne ton Futur Toi
