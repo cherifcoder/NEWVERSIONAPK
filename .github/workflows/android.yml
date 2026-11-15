@@ -13,6 +13,7 @@ jobs:
   build:
     name: Build signed release APK
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -30,29 +31,40 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Locate Android SDK
+      - name: Prepare Android SDK
         run: |
-          set -e
+          set -euo pipefail
           SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
-          SDKMGR="$(command -v sdkmanager || true)"
-          if [ -z "$SDKMGR" ] || [ ! -x "$SDKMGR" ]; then
-            SDKMGR="$(find "$SDK" /usr/local/lib/android /opt/android-sdk "$HOME/Android" \
-              -name sdkmanager -type f 2>/dev/null | head -n1 || true)"
-          fi
-          if [ -z "$SDKMGR" ]; then
-            echo "::error::sdkmanager introuvable — SDK Android absent du runner"
-            ls -la "$SDK" 2>/dev/null || true
-            exit 1
-          fi
-          echo "Using sdkmanager: $SDKMGR"
-          echo "$(dirname "$SDKMGR")" >> "$GITHUB_PATH"
           echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
+          echo "SDK used: $SDK"
 
-      - name: Install Android SDK components
-        run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+          SDKMGR="$(command -v sdkmanager || true)"
+          if [ -z "$SDKMGR" ]; then
+            for c in \
+              "$SDK/cmdline-tools/latest/bin/sdkmanager" \
+              "$SDK/cmdline-tools/bin/sdkmanager" \
+              "$SDK/tools/bin/sdkmanager"; do
+              if [ -x "$c" ]; then SDKMGR="$c"; break; fi
+            done
+          fi
+
+          if [ -z "$SDKMGR" ]; then
+            echo "sdkmanager absent — installation des command-line tools"
+            curl -sSL -o /tmp/cmdtools.zip \
+              https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+            unzip -q -o /tmp/cmdtools.zip -d "$SDK/cmdline-tools"
+            rm -rf "$SDK/cmdline-tools/latest"
+            mv "$SDK/cmdline-tools/cmdline-tools" "$SDK/cmdline-tools/latest"
+            SDKMGR="$SDK/cmdline-tools/latest/bin/sdkmanager"
+          fi
+
+          echo "Using sdkmanager: $SDKMGR"
+          echo "SDKMGR=$SDKMGR" >> "$GITHUB_ENV"
+          timeout 300 bash -c "yes | '$SDKMGR' --sdk_root='$SDK' --licenses > /dev/null 2>&1" || true
+          timeout 900 "$SDKMGR" --sdk_root="$SDK" \
+            "platform-tools" "platforms;android-36" "build-tools;36.0.0" || true
+          ls "$SDK/platforms" "$SDK/build-tools"
 
       - name: Install dependencies
         run: npm ci
