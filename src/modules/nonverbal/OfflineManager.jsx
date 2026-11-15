@@ -21,6 +21,7 @@ import {
   downloadBatch,
   estimateQuota,
   hasRoomFor,
+  isNative,
   loadQueue,
   removeMedia,
   storageMode,
@@ -48,10 +49,12 @@ export const OfflineManager = () => {
   const stopRef = useRef(false)
   const [stopping, setStopping] = useState(false)
   const [toast, setToast] = useState('')
+  const [lastError, setLastError] = useState('')
   const [queue, setQueue] = useState(() => loadQueue())
   const [openUnit, setOpenUnit] = useState(null)
 
   const mode = storageMode()
+  const native = isNative()
   const courseIds = useMemo(() => courseMediaIds(COURSE), [])
   const courseStatus = useMemo(
     () => bundleStatus(courseIds, state.nonverbal?.downloads || {}, mediaFor),
@@ -59,7 +62,10 @@ export const OfflineManager = () => {
   )
 
   const refresh = useCallback(() => {
-    estimateQuota().then(setQuota)
+    // Sur l'APK, le quota du WebView n'a pas de sens : l'espace est géré par
+    // le système de fichiers natif. On n'affiche donc pas de chiffre trompeur.
+    if (isNative()) setQuota(null)
+    else estimateQuota().then(setQuota)
     setQueue(loadQueue())
   }, [])
 
@@ -87,46 +93,61 @@ export const OfflineManager = () => {
 
   const runBatch = async (mediaIds, label) => {
     if (busy) return
-    const list = mediaIds.map(mediaFor).filter(Boolean)
-    const remaining = list.filter((m) => !downloads[m.id])
-    if (!remaining.length) {
-      flash('Tout est déjà disponible hors-ligne.')
-      return
-    }
-
-    const required = remaining.reduce((t, m) => t + (m.bytes || 0), 0)
-    const room = await hasRoomFor(required)
-    if (!room.ok) {
-      flash(room.reason || 'Espace insuffisant.')
-      return
-    }
-
-    setBusy(true)
-    stopRef.current = false
-    setStopping(false)
-    setBatchPct(0)
+    setLastError('')
     try {
-      const res = await downloadBatch(
-        remaining,
-        {
-          onItem: (media, st, pct) => setProgressMap((p) => ({ ...p, [media.id]: st === 'done' ? undefined : pct })),
-          onDone: (media, info) => nvMarkDownload(media.id, { ...info, downloadedAt: new Date().toISOString() }),
-          onBatch: (pct) => setBatchPct(pct),
-        },
-        { shouldStop: () => stopRef.current },
-      )
-      refresh()
-      flash(
-        res.failed.length
-          ? `${res.ok.length} média(s) téléchargé(s), ${res.failed.length} échec(s).`
-          : `${label} disponible hors-ligne (${formatBytes(required)}).`,
-      )
-    } finally {
+      const list = mediaIds.map(mediaFor).filter(Boolean)
+      const remaining = list.filter((m) => !downloads[m.id])
+      if (!remaining.length) {
+        flash('Tout est déjà disponible hors-ligne.')
+        return
+      }
+
+      const required = remaining.reduce((t, m) => t + (m.bytes || 0), 0)
+      const room = await hasRoomFor(required)
+      if (!room.ok) {
+        setLastError(room.reason || 'Espace insuffisant.')
+        flash(room.reason || 'Espace insuffisant.')
+        return
+      }
+
+      setBusy(true)
+      stopRef.current = false
+      setStopping(false)
+      setBatchPct(0)
+      try {
+        const res = await downloadBatch(
+          remaining,
+          {
+            onItem: (media, st, pct) => setProgressMap((p) => ({ ...p, [media.id]: st === 'done' ? undefined : pct })),
+            onDone: (media, info) => nvMarkDownload(media.id, { ...info, downloadedAt: new Date().toISOString() }),
+            onBatch: (pct) => setBatchPct(pct),
+          },
+          { shouldStop: () => stopRef.current },
+        )
+        refresh()
+        if (res.failed.length) {
+          const first = res.failed[0]?.error || 'erreur inconnue'
+          const msg = `${res.ok.length} média(s) prêt(s), ${res.failed.length} échec(s) — ${first}`
+          setLastError(msg)
+          flash(msg)
+        } else {
+          flash(`${label} disponible hors-ligne (${formatBytes(required)}).`)
+        }
+      } finally {
+        setBusy(false)
+        setTimeout(() => {
+          setBatchPct(null)
+          setProgressMap({})
+        }, 900)
+      }
+    } catch (err) {
+      // Filet de sécurité : sans ce catch, une erreur inattendue laisserait
+      // l'écran muet (le fameux « il ne se passe rien »).
       setBusy(false)
-      setTimeout(() => {
-        setBatchPct(null)
-        setProgressMap({})
-      }, 900)
+      const msg = `Téléchargement impossible : ${err?.message || 'erreur inconnue'}`
+      setLastError(msg)
+      flash(msg)
+      console.error('[offline] téléchargement', err)
     }
   }
 
@@ -157,7 +178,11 @@ export const OfflineManager = () => {
         <SectionTitle
           eyebrow="Mode hors-ligne"
           title="Télécharger le cours"
-          subtitle="Le vectoriel (illustrations, mini-vidéos) est déjà embarqué. Seuls l'audio et les fiches se téléchargent : quelques mégaoctets pour tout le parcours."
+          subtitle={
+            native
+              ? "Le vectoriel, l'audio et les fiches sont embarqués dans l'application : ils se lisent déjà sans réseau. Ce bouton les marque comme disponibles hors-ligne."
+              : "Le vectoriel (illustrations, mini-vidéos) est déjà embarqué. Seuls l'audio et les fiches se téléchargent : quelques mégaoctets pour tout le parcours."
+          }
           icon="HardDrive"
           right={
             <div className="flex flex-wrap justify-end gap-2">
@@ -180,12 +205,12 @@ export const OfflineManager = () => {
             value={quota ? formatBytes(quota.free) : '—'}
             icon="HardDrive"
             tone="slate"
-            hint={quota ? `sur ${formatBytes(quota.quota)}` : undefined}
+            hint={quota ? `sur ${formatBytes(quota.quota)}` : native ? 'géré par Android' : undefined}
           />
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <Button variant="gold" icon="Download" disabled={busy || !online} onClick={() => runBatch(courseIds, 'Le cours complet')}>
+          <Button variant="gold" icon="Download" disabled={busy} onClick={() => runBatch(courseIds, 'Le cours complet')}>
             {busy ? 'Téléchargement…' : 'Tout télécharger'}
           </Button>
           {busy && (
@@ -215,6 +240,21 @@ export const OfflineManager = () => {
           </div>
         )}
 
+        {lastError && (
+          <div className="mt-3 flex items-start gap-2 rounded-xl border border-rose-500/35 bg-rose-500/10 p-3">
+            <Icon name="AlertTriangle" size={15} className="mt-0.5 shrink-0 text-rose-300" />
+            <p className="text-[12px] leading-relaxed text-rose-100">{lastError}</p>
+            <button
+              type="button"
+              onClick={() => setLastError('')}
+              aria-label="Masquer le message"
+              className="ml-auto shrink-0 rounded-lg p-1 text-rose-200/70 transition hover:text-rose-100"
+            >
+              <Icon name="X" size={14} />
+            </button>
+          </div>
+        )}
+
         {mode === 'unavailable' && (
           <div className="mt-3 flex items-start gap-2 rounded-xl border border-amber-500/35 bg-amber-500/10 p-3">
             <Icon name="AlertTriangle" size={15} className="mt-0.5 shrink-0 text-amber-300" />
@@ -223,6 +263,13 @@ export const OfflineManager = () => {
               pour activer le téléchargement. Le contenu vectoriel reste accessible dans tous les cas.
             </p>
           </div>
+        )}
+
+        {native && (
+          <p className="mt-3 text-[11.5px] leading-relaxed text-ash">
+            Sur l'APK, l'audio et les fiches sont embarqués dans l'application : ils se lisent sans réseau même sans
+            téléchargement. « Tout télécharger » les marque comme disponibles pour que l'état hors-ligne soit explicite.
+          </p>
         )}
       </Panel>
 
@@ -247,7 +294,7 @@ export const OfflineManager = () => {
               <Chip tone="slate" icon="HardDrive">
                 {formatBytes(status.bytes)}
               </Chip>
-              <Button size="sm" variant="ghost" icon="Download" disabled={busy || !online || status.state === 'ready'} onClick={() => runBatch(ids, unit.title)}>
+              <Button size="sm" variant="ghost" icon="Download" disabled={busy || status.state === 'ready'} onClick={() => runBatch(ids, unit.title)}>
                 Télécharger l'unité
               </Button>
               {status.stored > 0 && (

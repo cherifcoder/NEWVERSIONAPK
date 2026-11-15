@@ -7,12 +7,18 @@
      Les fichiers survivent au redémarrage de l'app, sont servis par le
      service worker (public/sw.js) et lus hors-ligne sans réseau.
 
-   • Natif (APK Capacitor) : @capacitor/filesystem → répertoire Data de
-     l'application. Le téléchargement est fait par le code natif
-     (Filesystem.downloadFile), il ne bloque donc pas le thread JS et
-     continue plus longtemps quand l'app passe en arrière-plan. Les
-     fichiers vivent dans le stockage applicatif : ils résistent à
-     l'éviction du cache navigateur et supportent des vidéos volumineuses.
+   • Natif (APK Capacitor) : les médias livrés dans l'APK (public/media/…)
+     sont DÉJÀ dans les assets et lus directement par le WebView via
+     https://localhost/… : ils sont hors-ligne par construction. On les
+     marque simplement comme disponibles (mode « bundled »), sans copie.
+     Seuls les médias réellement distants (autre origine, ex. videoUrl
+     hébergée) passent par @capacitor/filesystem → répertoire Data.
+
+     ⚠ Piège Capacitor : « https://localhost » n'est PAS un vrai serveur.
+     Il n'est répondu que par le WebView (WebViewLocalServer, en cours de
+     process). Un client HTTP natif comme Filesystem.downloadFile tente une
+     vraie connexion TCP sur localhost:443, où rien n'écoute → échec. Il ne
+     faut donc jamais envoyer une URL https://localhost à downloadFile.
 
    La file d'attente est persistée (localStorage) : un lot interrompu
    (app fermée, réseau coupé) reprend là où il s'était arrêté.
@@ -56,6 +62,30 @@ const safeName = (src) => String(src).split('/').pop().split('?')[0] || 'media.b
 /** Chemin natif d'un média : method-media/<mediaId>-<fichier>. */
 const nativePath = (media) => `${NATIVE_DIR}/${media.id}-${safeName(media.src)}`
 
+const ABSOLUTE_URL_RE = /^[a-z][a-z0-9+.-]*:/i
+
+/**
+ * Un média « embarqué » est livré avec l'application elle-même : chemin
+ * relatif, même origine que l'app, ou schéma local (data:/blob:/capacitor:).
+ * Sur l'APK il est donc déjà dans les assets : rien à télécharger ni à
+ * recopier, il est hors-ligne par construction.
+ */
+export const isBundledMedia = (media) => {
+  const src = String(media?.src || '')
+  if (!src) return false
+  if (src.startsWith('data:') || src.startsWith('blob:')) return true
+  if (!ABSOLUTE_URL_RE.test(src)) return true // chemin relatif → embarqué
+  try {
+    const base = typeof window !== 'undefined' ? window.location.href : 'https://localhost/'
+    const url = new URL(src, base)
+    if (url.protocol === 'capacitor:' || url.protocol === 'file:') return true
+    if (typeof window !== 'undefined' && url.origin === window.location.origin) return true
+    return url.hostname === 'localhost' || url.hostname === '127.0.0.1'
+  } catch {
+    return true
+  }
+}
+
 /* --------------------------- Capacité --------------------------- */
 
 export const estimateQuota = async () => {
@@ -73,8 +103,13 @@ export const estimateQuota = async () => {
  * Renvoie { ok, free, reason } — `reason` sert à expliquer le refus à l'utilisateur.
  */
 export const hasRoomFor = async (bytes = 0) => {
+  // Sur l'APK, l'espace disque est géré par le système de fichiers natif :
+  // le quota annoncé par le WebView n'est pas représentatif (souvent 0) et
+  // refuserait le téléchargement à tort. On laisse Android arbitrer.
+  if (isNative()) return { ok: true, free: null, reason: null }
   const est = await estimateQuota()
-  if (!est) return { ok: true, free: null, reason: null }
+  // Quota inconnu ou nul : on ne bloque pas, on laisse la requête trancher.
+  if (!est || !est.quota) return { ok: true, free: null, reason: null }
   const usable = est.free * QUOTA_HEADROOM
   if (bytes > usable) {
     return {
@@ -154,6 +189,8 @@ export const resolveMediaSrc = async (media, stored) => {
   if (!media) return null
   if (isNative()) {
     if (stored?.mode === 'filesystem' && (await nativeExists(media))) return nativeSrc(media)
+    // Embarqué : l'URL https://localhost/… est servie par le WebView depuis
+    // les assets de l'APK, donc lisible hors-ligne sans aucun téléchargement.
     return absoluteUrl(media.src)
   }
   if (!cacheAvailable()) return media.src
@@ -195,6 +232,16 @@ export const isStored = async (media) => {
  */
 export const downloadMedia = async (media, onProgress) => {
   if (!media?.src) throw new Error('Média sans source')
+
+  // Sur l'APK, un média embarqué (chemin relatif / même origine) est déjà
+  // dans les assets : le WebView le lit sans réseau. Inutile — et impossible —
+  // de le faire télécharger par le code natif (https://localhost n'est pas un
+  // vrai serveur). On le marque simplement comme disponible.
+  if (isNative() && isBundledMedia(media)) {
+    onProgress?.(100)
+    return { bytes: media.bytes || 0, mode: 'bundled' }
+  }
+
   if (isNative()) {
     const { bytes, path } = await nativeDownload(media, onProgress)
     return { bytes, mode: 'filesystem', path }
@@ -206,7 +253,11 @@ export const downloadMedia = async (media, onProgress) => {
 
 export const removeMedia = async (media) => {
   releaseObjectUrl(media.id)
-  if (isNative()) return nativeRemove(media)
+  if (isNative()) {
+    // Un média embarqué vit dans l'APK : il n'y a rien à supprimer.
+    if (isBundledMedia(media)) return true
+    return nativeRemove(media)
+  }
   if (!cacheAvailable()) return false
   return removeCachedMedia(absoluteUrl(media.src))
 }

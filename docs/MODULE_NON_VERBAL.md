@@ -196,24 +196,39 @@ sans toucher aux animations elles-mêmes.
 | Famille | Poids | Emplacement | Téléchargement |
 | --- | --- | --- | --- |
 | **Inline** (illustrations, clips, quiz, textes lisibles) | 0 o | Bundle JS | Aucun — déjà là |
-| **Téléchargeable** (audio WAV, `.txt`, `.mp4` éventuel) | ~1,45 Mo | Cache / système de fichiers | À la demande |
+| **Téléchargeable** (audio WAV, `.txt`, `.mp4` éventuel) | ~1,45 Mo | Assets de l'APK / Cache | À la demande |
 
 Concrètement : **16 ressources téléchargeables** (4 audio ≈ 1,4 Mo, 12 textes
 ≈ 12 Ko). Tout le reste est embarqué.
 
-### 4.2 Deux adaptateurs, choisis automatiquement (`src/lib/offlineMedia.js`)
+> Les 16 ressources sont aussi copiées dans `dist/media/nonverbal/` et donc
+> **incluses dans l'APK** (`assets/public/media/nonverbal/`). Sur l'appareil,
+> l'audio et les fiches sont donc lisibles **sans réseau dès l'installation** :
+> le bouton « Télécharger » ne fait que marquer cet état (`mode: 'bundled'`).
+> Sur le web, il remplit réellement le Cache Storage.
+
+### 4.2 Trois modes, choisis automatiquement (`src/lib/offlineMedia.js`)
 
 `storageMode()` renvoie :
 
-- **`filesystem`** (APK Capacitor, `isNative()`) → `@capacitor/filesystem`,
-  `Directory.Data`, chemin `method-media/<mediaId>-<fichier>`. Le téléchargement
-  est fait par le **code natif** (`Filesystem.downloadFile`, événement
-  `progress`) : il ne bloque pas le thread JS et survit mieux à l'arrière-plan.
-  Lecture via `Capacitor.convertFileSrc()`. Les fichiers résistent à l'éviction
-  du cache navigateur et supportent de grosses vidéos.
+- **`filesystem`** (APK Capacitor, `isNative()`) → les médias **embarqués**
+  (chemin relatif / même origine, cf. `isBundledMedia()`) sont marqués
+  `mode: 'bundled'` **sans aucune copie** : le WebView les lit directement
+  depuis les assets via `https://localhost/…`.
+  Seuls les médias **réellement distants** (autre origine, ex. `videoUrl`
+  hébergée) passent par `@capacitor/filesystem`, `Directory.Data`, chemin
+  `method-media/<mediaId>-<fichier>`, via `Filesystem.downloadFile` (événement
+  `progress`) ; lecture via `Capacitor.convertFileSrc()`.
 - **`cache`** (web / WebView) → **Cache Storage** `method-media-v1` via
   `cacheMedia()` (`src/lib/storage.js`). Lecture via `URL.createObjectURL`
   (mis en cache en mémoire, `releaseObjectUrl()` pour libérer).
+- **`unavailable`** → `caches` absent (ex. `file://`) : message explicite.
+
+> ⚠ **Piège Capacitor.** `https://localhost` n'est pas un vrai serveur : il
+> n'est répondu que par le WebView (`WebViewLocalServer`, en cours de process).
+> Un client HTTP **natif** comme `Filesystem.downloadFile` tenterait une vraie
+> connexion TCP sur `localhost:443`, où rien n'écoute → échec silencieux. Il ne
+> faut donc **jamais** passer une URL `https://localhost/…` à `downloadFile`.
 
 `resolveMediaSrc(media, stored)` renvoie toujours une URL **immédiatement
 lisible** : fichier local si présent, sinon la source réseau (streaming).
@@ -223,7 +238,9 @@ lisible** : fichier local si présent, sinon la source réseau (streaming).
 Avant un lot, `hasRoomFor(bytes)` interroge `navigator.storage.estimate()` et
 refuse si le lot dépasserait **92 %** de l'espace utilisable
 (`QUOTA_HEADROOM`). Le motif du refus est renvoyé pour être affiché tel quel à
-l'utilisateur.
+l'utilisateur. Sur l'APK, la vérification est **ignorée** : le quota annoncé par
+le WebView n'est pas représentatif du système de fichiers natif (il vaut souvent
+0 et refuserait à tort) ; Android arbitre lui-même.
 
 ### 4.4 File d'attente persistante & reprise
 

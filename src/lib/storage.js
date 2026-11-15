@@ -144,7 +144,6 @@ export const cacheMedia = async (url, onProgress) => {
   const res = await fetch(url, { cache: 'no-store' })
   if (!res.ok) throw new Error(`Téléchargement échoué (${res.status})`)
   const total = Number(res.headers.get('content-length') || 0)
-  const clone = res.clone()
 
   if (onProgress && res.body && total) {
     const reader = res.body.getReader()
@@ -159,11 +158,11 @@ export const cacheMedia = async (url, onProgress) => {
       onProgress(Math.min(100, Math.round((received / total) * 100)))
     }
     const blob = new Blob(chunks)
-    await cache.put(url, new Response(blob, { headers: clone.headers }))
+    await cache.put(url, new Response(blob, { headers: res.headers }))
     return { size: blob.size }
   }
 
-  await cache.put(url, clone)
+  await cache.put(url, res.clone())
   const stored = await cache.match(url)
   const size = Number(stored?.headers.get('content-length') || 0)
   onProgress?.(100)
