@@ -10,19 +10,24 @@
                  quelques hertz → l'effet n'existe qu'au casque.
    • Repères  : cloche, gong, bol, souffle — fichiers embarqués, avec
                  repli sur une synthèse Web Audio si le chargement échoue.
-   • Voix     : synthèse vocale du système (speechSynthesis), en français.
-                 Si elle est absente, la séance se lit silencieusement.
+   • Voix     : par défaut une voix neuronale française EMBARQUÉE
+                 (public/media/hypnosis/voix/…, un MP3 par phrase), lue via
+                 Web Audio : identique et douce sur tous les appareils.
+                 Replis : synthèse vocale du système, puis lecture muette.
 
    Le graphe : chaque source → son gain → master → sortie.
 ------------------------------------------------------------------- */
 
 let ctx = null
 let master = null
+let voiceGain = null
 
 const runtime = {
   buffers: new Map(),
   ambience: null, // { source, gain, url }
   binaural: null, // { oscL, oscR, gain }
+  voice: null, // source vocale en cours
+  voiceToken: 0, // invalide les lectures interrompues
   voicesReady: false,
 }
 
@@ -80,6 +85,70 @@ export const loadBuffer = async (url) => {
 }
 
 export const preload = (urls = []) => Promise.all(urls.filter(Boolean).map((u) => loadBuffer(u)))
+
+/* ------------------------- Voix neuronale ------------------------- */
+
+const ensureVoiceGain = () => {
+  if (voiceGain) return voiceGain
+  if (!ctx || !master) return null
+  voiceGain = ctx.createGain()
+  voiceGain.gain.value = 1
+  voiceGain.connect(master)
+  return voiceGain
+}
+
+export const voicePlaying = () => Boolean(runtime.voice)
+
+/**
+ * Joue une phrase enregistrée (MP3 embarqué) et résout à sa fin :
+ *   'ended'       — phrase terminée normalement ;
+ *   'stopped'     — interrompue par stopVoice() (pause, saut, sortie) ;
+ *   'error'       — fichier illisible ;
+ *   'unsupported' — pas de Web Audio.
+ * Le son passe par le gain maître, comme l'ambiance et le binaural.
+ */
+export const playVoiceLine = async (url, { playbackRate = 1, gain = 1 } = {}) => {
+  const c = ensureContext()
+  if (!c || !url) return c ? 'error' : 'unsupported'
+  const myToken = runtime.voiceToken + 1
+  runtime.voiceToken = myToken
+  const buffer = await loadBuffer(url)
+  if (myToken !== runtime.voiceToken) return 'stopped'
+  if (!buffer) return 'error'
+  return new Promise((resolve) => {
+    try {
+      const source = c.createBufferSource()
+      source.buffer = buffer
+      source.playbackRate.value = Math.max(0.5, Math.min(1.5, playbackRate))
+      const g = c.createGain()
+      g.gain.value = Math.max(0, Math.min(1, gain))
+      source.connect(g)
+      const target = ensureVoiceGain()
+      g.connect(target || master)
+      source.onended = () => {
+        if (runtime.voice === source) runtime.voice = null
+        resolve(myToken === runtime.voiceToken ? 'ended' : 'stopped')
+      }
+      runtime.voice = source
+      source.start()
+    } catch {
+      resolve('error')
+    }
+  })
+}
+
+export const stopVoice = () => {
+  runtime.voiceToken += 1
+  const s = runtime.voice
+  runtime.voice = null
+  if (!s) return
+  try {
+    s.onended = null
+    s.stop()
+  } catch {
+    /* déjà arrêtée */
+  }
+}
 
 /* --------------------------- Volume maître --------------------------- */
 
@@ -335,6 +404,7 @@ export const speaking = () => (ttsSupported() ? window.speechSynthesis.speaking 
 
 export const stopAll = ({ fade = 1 } = {}) => {
   stopSpeaking()
+  stopVoice()
   stopAmbience({ fade })
   stopBinaural({ fade })
 }
@@ -344,7 +414,9 @@ export const dispose = async () => {
   stopAll({ fade: 0.2 })
   runtime.ambience = null
   runtime.binaural = null
+  runtime.voice = null
   runtime.buffers.clear()
+  voiceGain = null
   if (ctx) {
     const c = ctx
     ctx = null

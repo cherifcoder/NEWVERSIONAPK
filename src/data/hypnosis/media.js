@@ -1,8 +1,7 @@
 /* ------------------------------------------------------------------
    media.js — Manifeste des médias du module « Hypnose éricksonienne »
    ------------------------------------------------------------------
-   Trois familles de fichiers, toutes générées localement par
-   scripts/generate-hypnosis.mjs (aucune API, aucun réseau) :
+   Quatre familles de fichiers, toutes embarquées et disponibles hors-ligne :
 
    1. AMBIANCES  (public/media/hypnosis/ambience/*.wav)
       Boucles sonores de 24 s, lues en boucle pendant la séance.
@@ -14,6 +13,12 @@
    3. SCRIPTS    (public/media/hypnosis/voix/*.txt)
       Le texte intégral de chaque séance, à relire hors-ligne.
 
+   4. VOIX       (public/media/hypnosis/voix/<voix>/<séance>/*.mp3)
+      La voix neuronale française de chaque phrase, enregistrée une fois
+      pour toutes par scripts/generate-hypnosis-voice.mjs (manifeste
+      voiceTracks.js). Identique sur tous les appareils, douce et humaine,
+      sans synthèse vocale du système.
+
    Les mêmes fichiers sont disponibles dans le bundle (chemins relatifs) :
    sur l'APK ils sont déjà embarqués dans les assets, sur le web ils sont
    servis par le service worker. Le téléchargement explicite (onglet
@@ -21,11 +26,15 @@
 ------------------------------------------------------------------- */
 
 import { SESSIONS } from './sessions.js'
+import { NEURAL_VOICES, VOICE_ENGINE, VOICE_GENERATED_AT, VOICE_SAMPLE, VOICE_TOTALS, VOICE_TRACKS } from './voiceTracks.js'
+
+export { VOICE_ENGINE, VOICE_GENERATED_AT }
 
 export const HY_KIND_META = {
   ambience: { label: 'Ambiance', icon: 'Waves', tone: 'sapphire', color: '#4a7fd4' },
   cue: { label: 'Repère sonore', icon: 'BellRing', tone: 'jade', color: '#2f9e78' },
   script: { label: 'Script', icon: 'FileText', tone: 'gold', color: '#cfa851' },
+  voice: { label: 'Voix neuronale', icon: 'AudioLines', tone: 'gold', color: '#e0c07c' },
 }
 
 const ambience = (id, title, subtitle, src, bytes, description) => ({
@@ -171,9 +180,73 @@ export const SCRIPTS_MEDIA = Object.fromEntries(
   ]),
 )
 
+/* ------------------------ Voix neuronales ------------------------ */
+
+/**
+ * Voix neuronales embarquées (générées par generate-hypnosis-voice.mjs).
+ * Chaque séance est découpée en phrases : un MP3 par phrase, mis bout à
+ * bout par le lecteur, qui place lui-même les silences. C'est ce qui donne
+ * un rythme lent, respiré, et une mise en évidence exacte de la phrase lue.
+ */
+export const NEURAL_VOICE_LIST = NEURAL_VOICES
+
+export const NEURAL_VOICE_DEFAULT = NEURAL_VOICES[0]?.id || null
+
+export const voiceSampleSrc = (voiceId) => VOICE_SAMPLE[voiceId] || null
+
+/** Statistiques d'une voix : { seconds, bytes, lines }. */
+export const voiceStats = (voiceId) => VOICE_TOTALS[voiceId] || null
+
+/** Données d'une voix pour une séance : { [phaseId]: { lines, seconds, bytes } }. */
+export const voiceTrack = (sessionId, voiceId) => VOICE_TRACKS[voiceId]?.[sessionId] || null
+
+/** Une phase : { lines: [{ src, seconds, bytes }], seconds, bytes } | null. */
+export const voicePhase = (sessionId, voiceId, phaseId) => VOICE_TRACKS[voiceId]?.[sessionId]?.[phaseId] || null
+
+/** Une voix neuronale embarquée existe-t-elle pour cette séance ? */
+export const hasNeuralVoice = (sessionId) =>
+  NEURAL_VOICES.some((v) => Boolean(VOICE_TRACKS[v.id]?.[sessionId]))
+
+const voiceItem = (voice, session, phase, line, index) => ({
+  id: `hy-voix-${voice.id}-${session.id}-${phase.id}-${String(index).padStart(2, '0')}`,
+  kind: 'voice',
+  title: `${session.title} · ${phase.title}`,
+  subtitle: `${voice.label} — phrase ${index + 1}`,
+  src: line.src,
+  bytes: line.bytes,
+  duration: `${Math.round(line.seconds)} s`,
+  version: 1,
+  voiceId: voice.id,
+  sessionId: session.id,
+  phaseId: phase.id,
+  lineIndex: index,
+  description: `Phrase ${index + 1} de la phase « ${phase.title} » (${session.title}), dite par la voix ${voice.label}.`,
+})
+
+export const VOICE_MEDIA = {}
+for (const voice of NEURAL_VOICES) {
+  for (const session of SESSIONS) {
+    const byPhase = VOICE_TRACKS[voice.id]?.[session.id] || {}
+    for (const phase of session.phases) {
+      const track = byPhase[phase.id]
+      if (!track) continue
+      track.lines.forEach((line, index) => {
+        const item = voiceItem(voice, session, phase, line, index)
+        VOICE_MEDIA[item.id] = item
+      })
+    }
+  }
+}
+
+export const VOICE_MEDIA_LIST = Object.values(VOICE_MEDIA)
+
+export const voiceMediaList = (voiceId) => VOICE_MEDIA_LIST.filter((m) => m.voiceId === voiceId)
+
+export const VOICE_TOTAL_BYTES = VOICE_MEDIA_LIST.reduce((t, m) => t + (m.bytes || 0), 0)
+
 /* ------------------------- Vue d'ensemble ------------------------- */
 
-export const HY_MEDIA = { ...AMBIENCES, ...CUES, ...SCRIPTS_MEDIA }
+export const HY_MEDIA = { ...AMBIENCES, ...CUES, ...SCRIPTS_MEDIA, ...VOICE_MEDIA }
 
 export const HY_MEDIA_LIST = Object.values(HY_MEDIA)
 
@@ -187,12 +260,13 @@ export const SCRIPT_LIST = Object.values(SCRIPTS_MEDIA)
 
 export const TOTAL_HY_BYTES = HY_MEDIA_LIST.reduce((t, m) => t + (m.bytes || 0), 0)
 
-/** Tous les identifiants de médias utiles à une séance (ambiance + script). */
+/** Tous les identifiants de médias utiles à une séance (ambiance + script + voix). */
 export const sessionMediaIds = (session) => {
   if (!session) return []
   const ids = []
   if (session.ambience) ids.push(session.ambience)
   const scriptId = `hy-txt-${session.id}`
   if (HY_MEDIA[scriptId]) ids.push(scriptId)
+  for (const m of VOICE_MEDIA_LIST) if (m.sessionId === session.id) ids.push(m.id)
   return ids
 }

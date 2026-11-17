@@ -1,14 +1,16 @@
 /* ------------------------------------------------------------------
    HypnosisStudio.jsx — Module « Hypnose éricksonienne » (module 12)
    ------------------------------------------------------------------
-   Quatre onglets :
+   Cinq onglets :
      • Séances    — catalogue des 6 séances + lecteur guidé
-     • Hors-ligne — téléchargement des ambiances, repères et scripts
+     • Voix       — voix neuronales embarquées, moteur et rythme
+     • Hors-ligne — téléchargement des ambiances, repères, scripts et voix
      • Ambiances  — laboratoire binaural / fonds sonores / repères
      • Progression— statistiques, séance conseillée, journal
 
-   Contenu 100 % local : les scripts sont écrits dans le code et les sons
-   sont générés par scripts/generate-hypnosis.mjs (aucune API, aucun réseau).
+   Contenu 100 % local : les scripts sont écrits dans le code, les sons
+   sont générés par scripts/generate-hypnosis.mjs et les voix par
+   scripts/generate-hypnosis-voice.mjs (aucune API, aucun réseau au runtime).
 ------------------------------------------------------------------- */
 
 import { useMemo, useState } from 'react'
@@ -22,9 +24,11 @@ import { AmbienceLab } from './AmbienceLab'
 import { HypnosisOffline } from './HypnosisOffline'
 import { HypnosisProgress } from './HypnosisProgress'
 import { SessionPlayer } from './SessionPlayer'
+import { VoiceLab } from './VoiceLab'
 
 const TABS = [
   { id: 'seances', label: 'Séances', icon: 'ListMusic' },
+  { id: 'voix', label: 'Voix', icon: 'AudioLines' },
   { id: 'offline', label: 'Hors-ligne', icon: 'HardDrive' },
   { id: 'ambiances', label: 'Ambiances', icon: 'SlidersHorizontal' },
   { id: 'progress', label: 'Progression', icon: 'TrendingUp' },
@@ -234,6 +238,7 @@ export const HypnosisStudio = () => {
       )}
 
       {tab === 'offline' && <HypnosisOffline />}
+      {tab === 'voix' && <VoiceLab onGoOffline={() => setTab('offline')} />}
       {tab === 'ambiances' && <AmbienceLab onGoOffline={() => setTab('offline')} />}
       {tab === 'progress' && (
         <HypnosisProgress onStartSession={(id) => setActiveId(id)} onGoSessions={() => setTab('seances')} />

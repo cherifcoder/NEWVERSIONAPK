@@ -35,6 +35,12 @@ export const defaultHypnosis = () => ({
   version: 1,
   // Préférences de lecture des séances
   prefs: {
+    // Voix : 'neural' (voix embarquée, par défaut) | 'device' (synthèse du téléphone) | 'off'
+    voiceEngine: 'neural',
+    // Voix neuronale choisie (voir NEURAL_VOICE_LIST).
+    voiceId: 'denise',
+    // Longueur des silences entre les phrases (× la valeur par défaut).
+    voicePause: 1,
     voice: true,
     voiceRate: 0.9,
     voicePitch: 0.95,

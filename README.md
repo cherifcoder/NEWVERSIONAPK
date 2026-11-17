@@ -13,13 +13,13 @@ Aucune donnée ne quitte ton téléphone.
 | Source | Lien |
 | --- | --- |
 | **Dernière version (GitHub Releases)** | https://github.com/cherifcoder/NEWVERSIONAPK/releases/latest |
-| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.2.0-apk* |
+| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.3.0-apk* |
 
-**Fichier :** `METHOD-1.2.0.apk` — min. Android 7.0 (API 24).
+**Fichier :** `METHOD-1.3.0.apk` — min. Android 7.0 (API 24).
 
 ### Installation sur le téléphone
 
-1. Télécharge `METHOD-1.2.0.apk` sur ton téléphone.
+1. Télécharge `METHOD-1.3.0.apk` sur ton téléphone.
 2. Ouvre le fichier (Gestionnaire de fichiers → *Téléchargements*).
 3. Android affiche un avertissement : autorise **« Installer des applications inconnues »**
    pour ton navigateur / gestionnaire de fichiers.
@@ -79,8 +79,12 @@ Séances guidées d'hypnose éricksonienne, **écrites et sonorisées sur l'appa
 - **6 séances** (détente, focus, prise de parole, sommeil, estime, projection),
   déroulées en phases typées — accueil → induction → approfondissement →
   suggestion → visualisation → ancrage → émergence.
-- **Voix** : synthèse vocale du téléphone (fr-FR), qui pilote le rythme des
-  phases ; repli sur la **lecture silencieuse** à l'écran si la voix est absente.
+- **Voix neuronale française embarquée** : deux voix douces et humaines (Denise,
+  Henri) enregistrées **dans l'application** (un MP3 par phrase) — la même sur
+  tous les téléphones, sans réseau, avec des silences dosés entre les phrases
+  pour un vrai rythme d'hypnose. Onglet *Voix* : pré-écoute, choix de la voix,
+  moteur (embarquée / téléphone / silencieuse) et longueur des pauses. Repli
+  automatique sur la synthèse du téléphone, puis sur la lecture silencieuse.
 - **Bande-son embarquée** : 5 boucles d'ambiance (nappe, pluie, vagues, forêt,
   feu) + 5 repères sonores (cloche, gong, bol, souffles), plus un **battement
   binaural** généré en direct (6 presets : delta → gamma).
@@ -88,8 +92,8 @@ Séances guidées d'hypnose éricksonienne, **écrites et sonorisées sur l'appa
   et des repères, avec réglage du volume.
 - **Progression** : séances, minutes, série de jours, **séance conseillée** par
   l'analyse locale, journal des ressentis, lecture de la pratique.
-- **Hors-ligne** : les sons et les scripts sont **embarqués dans l'APK** (et mis
-  en cache sur le web) — lisibles sans réseau, à vie.
+- **Hors-ligne** : les sons, les scripts **et les voix** sont **embarqués dans
+  l'APK** (et mis en cache sur le web) — lisibles sans réseau, à vie.
 
 > Séance à faire assis ou allongé, **jamais en conduisant** ; le battement
 > binaural nécessite un casque et ne remplace aucun soin médical.
@@ -153,6 +157,7 @@ npm run lint      # oxlint
 node scripts/generate-media.mjs        # posters SVG, audio WAV, textes
 node scripts/generate-nonverbal.mjs    # module 11 : audio, textes, postures et clips SVG
 node scripts/generate-hypnosis.mjs     # module 12 : ambiances WAV, repères sonores, scripts
+node scripts/generate-hypnosis-voice.mjs   # module 12 : voix neuronales françaises (MP3)
 node scripts/generate-icons.mjs        # icônes + splash (PNG depuis public/logo.svg)
 npx capacitor-assets generate --android   # distribue icônes/splash dans android/
 ```
@@ -190,11 +195,11 @@ Le workflow `.github/workflows/android.yml` construit l'APK signé à chaque
 lors d'un tag `v*` :
 
 ```bash
-git tag v1.2.0
-git push origin v1.2.0
+git tag v1.3.0
+git push origin v1.3.0
 ```
 
-L'APK est nommé d'après la version : `METHOD-1.2.0.apk`.
+L'APK est nommé d'après la version : `METHOD-1.3.0.apk`.
 
 ### Signature
 
@@ -213,7 +218,7 @@ src/
   context/        AppContext (état global, persistance, PIN, rollover de jour)
   data/           tracks, archetypes, wisdom, exercises, eloquence, english, resources…
                   + nonverbal/ (curriculum, media, scripts)
-                  + hypnosis/  (sessions, media, presets)
+                  + hypnosis/  (sessions, media, presets, voiceTracks)
   hooks/          useDeepWorkTimer
   lib/            aiAgent, aiAnalysis, aiTasks, crypto (PIN), storage, utils
                   + figure (moteur SVG), curriculum, offlineMedia, hypnosisAudio
@@ -223,7 +228,8 @@ public/
   media/          ressources générées (posters, audio, textes, nonverbal/, hypnosis/)
   logo.svg
 docs/             MODULE_NON_VERBAL.md, MODULE_HYPNOSE.md
-scripts/          generate-media.mjs, generate-nonverbal.mjs, generate-hypnosis.mjs, generate-icons.mjs
+scripts/          generate-media.mjs, generate-nonverbal.mjs, generate-hypnosis.mjs,
+                  generate-hypnosis-voice.mjs, generate-icons.mjs
 android/          projet Capacitor natif
 .github/          workflow de build APK
 ```

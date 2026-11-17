@@ -4,8 +4,9 @@
    • Chronologie par phases (accueil → induction → … → émergence)
    • Orbe de respiration animée + anneau de progression
    • Bande-son : ambiance embarquée + battement binaural (Web Audio)
-   • Voix : synthèse vocale française, qui pilote le rythme des phases
-   • Le texte de la phase s'affiche et se surligne ligne par ligne
+   • Voix : voix neuronale EMBARQUÉE (une phrase = un fichier), qui donne
+            le rythme des phases ; repli sur la synthèse du téléphone, puis
+            sur une lecture silencieuse. La phrase en cours se surligne.
    • Bilan de fin : ressenti + note, enregistrés dans le journal
 ------------------------------------------------------------------- */
 
@@ -13,11 +14,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Icon from '../../components/ui/Icon'
 import { Button, Chip, Panel, ProgressBar, ProgressRing, SectionTitle } from '../../components/ui/Primitives'
 import { useApp } from '../../context/AppContext'
-import { ambienceFor, CUES } from '../../data/hypnosis/media'
-import { PHASE_KIND, sessionSeconds } from '../../data/hypnosis/sessions'
 import {
+  CUES,
+  NEURAL_VOICE_DEFAULT,
+  NEURAL_VOICE_LIST,
+  ambienceFor,
+  voiceTrack,
+} from '../../data/hypnosis/media'
+import { PHASE_KIND } from '../../data/hypnosis/sessions'
+import {
+  audioSupported,
   binauralRunning,
   playCue,
+  playVoiceLine,
+  preload,
   primeAudio,
   setMasterVolume,
   speak,
@@ -28,6 +38,7 @@ import {
   stopAmbience,
   stopBinaural,
   stopSpeaking,
+  stopVoice,
   ttsSupported,
 } from '../../lib/hypnosisAudio'
 import { cx, formatClock, formatMinutes } from '../../lib/utils'
@@ -49,6 +60,23 @@ const cueForPhase = (phase, index, total) => {
   return cueUrl('hy-son-cloche-claire')
 }
 
+/* Rythme de la voix embarquée : un silence entre chaque phrase, plus long
+   pendant l'induction et la visualisation — c'est ce qui crée la lenteur. */
+const PAUSE_BASE = 1400
+const PAUSE_BY_KIND = {
+  accueil: 0.7,
+  induction: 1.15,
+  approfondissement: 1.3,
+  suggestion: 1.05,
+  visualisation: 1.35,
+  ancrage: 1.0,
+  emergence: 0.8,
+  silence: 1.7,
+}
+const LEAD_IN = 1100
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
   const { state, hySetPrefs, hyCompleteSession, hyAddJournalEntry } = useApp()
   const prefs = state.hypnosis?.prefs || {}
@@ -56,6 +84,7 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
   const [status, setStatus] = useState('idle') // idle | running | paused | done
   const [pi, setPi] = useState(0)
   const [elapsed, setElapsed] = useState(0)
+  const [lineIndex, setLineIndex] = useState(0)
   const [mood, setMood] = useState('calme')
   const [note, setNote] = useState('')
   const [saved, setSaved] = useState(false)
@@ -63,32 +92,87 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
 
   const speakingRef = useRef(false)
   const startedAtRef = useRef(null)
+  const runRef = useRef(0) // invalide les enchaînements obsolètes
+  const runPhaseRef = useRef(null)
+  const goToPhaseRef = useRef(null)
+  const finishRef = useRef(null)
 
   const phases = session.phases
-  const total = useMemo(() => sessionSeconds(session), [session])
-  const phase = phases[Math.min(pi, phases.length - 1)]
-  const phaseSeconds = phase?.seconds || 1
-  const doneSeconds = useMemo(
-    () => phases.slice(0, pi).reduce((t, p) => t + (p.seconds || 0), 0) + Math.min(elapsed, phaseSeconds),
-    [phases, pi, elapsed, phaseSeconds],
-  )
-  const overallPct = total ? Math.round((doneSeconds / total) * 100) : 0
-  const activeLine = Math.min(
-    (phase?.lines?.length || 1) - 1,
-    Math.floor((elapsed / phaseSeconds) * (phase?.lines?.length || 1)),
-  )
 
-  const voice = prefs.voice !== false && ttsSupported()
+  /* ---------------------- Moteur de voix ---------------------- */
+
+  const neuralTracks = useMemo(
+    () => voiceTrack(session.id, prefs.voiceId || NEURAL_VOICE_DEFAULT),
+    [session.id, prefs.voiceId],
+  )
+  const neuralAvailable = Boolean(neuralTracks) && audioSupported()
+  const canVoice = neuralAvailable || ttsSupported()
+  const wanted = prefs.voice === false ? 'off' : prefs.voiceEngine || 'neural'
+  const voiceMode =
+    wanted === 'off'
+      ? 'off'
+      : wanted === 'neural'
+        ? neuralAvailable
+          ? 'neural'
+          : ttsSupported()
+            ? 'device'
+            : 'off'
+        : ttsSupported()
+          ? 'device'
+          : 'off'
+  const voiceOn = voiceMode !== 'off'
+  const neuralVoice =
+    NEURAL_VOICE_LIST.find((v) => v.id === (prefs.voiceId || NEURAL_VOICE_DEFAULT)) || NEURAL_VOICE_LIST[0] || null
+  const voiceLabel =
+    voiceMode === 'neural' ? neuralVoice?.label || 'embarquée' : voiceMode === 'device' ? 'du téléphone' : 'silencieuse'
+
   const ambienceOn = prefs.ambience !== false
   const binauralOn = prefs.binaural !== false
   const volume = typeof prefs.volume === 'number' ? prefs.volume : 0.7
 
-  /* ------------------------- Parole ------------------------- */
+  /* ---------------------- Durées ---------------------- */
+
+  const pauseMs = useCallback(
+    (phaseObj) => {
+      const mult = typeof prefs.voicePause === 'number' ? prefs.voicePause : 1
+      const base = PAUSE_BASE * (PAUSE_BY_KIND[phaseObj?.kind] ?? 1)
+      return Math.max(150, Math.round(base * mult))
+    },
+    [prefs.voicePause],
+  )
+
+  const phaseSecondsFor = useCallback(
+    (p) => {
+      if (voiceMode === 'neural') {
+        const t = neuralTracks?.[p.id]
+        if (t?.lines?.length) return t.seconds + (pauseMs(p) / 1000) * Math.max(0, t.lines.length - 1)
+      }
+      return p.seconds || 1
+    },
+    [voiceMode, neuralTracks, pauseMs],
+  )
+
+  const total = useMemo(() => phases.reduce((t, p) => t + phaseSecondsFor(p), 0), [phases, phaseSecondsFor])
+  const phase = phases[Math.min(pi, phases.length - 1)]
+  const phaseSeconds = phaseSecondsFor(phase)
+  const doneSeconds = useMemo(
+    () => phases.slice(0, pi).reduce((t, p) => t + phaseSecondsFor(p), 0) + Math.min(elapsed, phaseSeconds),
+    [phases, pi, elapsed, phaseSeconds, phaseSecondsFor],
+  )
+  const overallPct = total ? Math.round((doneSeconds / total) * 100) : 0
+  const phasePct = phaseSeconds ? Math.min(100, (elapsed / phaseSeconds) * 100) : 0
+  const lineCount = phase?.lines?.length || 1
+  const activeLine =
+    voiceMode === 'neural'
+      ? Math.min(lineCount - 1, lineIndex)
+      : Math.min(lineCount - 1, Math.floor((elapsed / phaseSeconds) * lineCount))
+
+  /* ------------------------- Parole (TTS) ------------------------- */
 
   const startSpeech = useCallback(
     (phaseObj, fromLine = 0) => {
       speakingRef.current = false
-      if (!voice || !phaseObj) return
+      if (voiceMode !== 'device' || !phaseObj) return
       const lines = phaseObj.lines.slice(fromLine)
       if (!lines.length) return
       speakingRef.current = true
@@ -101,34 +185,102 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
       })
       if (!ok) speakingRef.current = false
     },
-    [voice, prefs.voiceRate, prefs.voicePitch],
+    [voiceMode, prefs.voiceRate, prefs.voicePitch],
   )
+
+  /* -------------------- Voix embarquée (MP3) -------------------- */
+
+  /** Enchaîne les phrases d'une phase, avec un silence entre chacune. */
+  const runPhase = async (index, fromLine = 0) => {
+    const runId = runRef.current + 1
+    runRef.current = runId
+    const phaseObj = phases[index]
+    if (!phaseObj || voiceMode !== 'neural') return
+    const lines = neuralTracks?.[phaseObj.id]?.lines || []
+    const rate = typeof prefs.voicePlayback === 'number' ? prefs.voicePlayback : 1
+
+    if (!lines.length) {
+      await sleep(2000)
+      if (runRef.current !== runId) return
+      if (index + 1 < phases.length) goToPhaseRef.current?.(index + 1)
+      else finishRef.current?.()
+      return
+    }
+
+    // Précharge en tâche de fond les phrases à venir et la phase suivante.
+    preload(lines.map((l) => l.src))
+    const nextTrack = neuralTracks?.[phases[index + 1]?.id]
+    if (nextTrack) preload(nextTrack.lines.map((l) => l.src))
+
+    if (fromLine === 0) {
+      await sleep(LEAD_IN)
+      if (runRef.current !== runId) return
+    }
+
+    let clock = 0
+    for (let i = 0; i < fromLine; i += 1) clock += (lines[i].seconds || 0) + pauseMs(phaseObj) / 1000
+
+    for (let i = fromLine; i < lines.length; i += 1) {
+      if (runRef.current !== runId) return
+      setLineIndex(i)
+      setElapsed(clock)
+      // eslint-disable-next-line no-await-in-loop
+      const res = await playVoiceLine(lines[i].src, { playbackRate: rate, gain: 1 })
+      if (runRef.current !== runId) return
+      if (res === 'stopped') return
+      clock += (lines[i].seconds || 0) + pauseMs(phaseObj) / 1000
+      if (i < lines.length - 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(pauseMs(phaseObj))
+        if (runRef.current !== runId) return
+      }
+    }
+
+    if (runRef.current !== runId) return
+    setElapsed(phaseSecondsFor(phaseObj))
+    if (index + 1 < phases.length) goToPhaseRef.current?.(index + 1)
+    else finishRef.current?.()
+  }
 
   /* ------------------------- Chronologie ------------------------- */
 
-  const goToPhase = useCallback(
-    (index) => {
-      const clamped = Math.max(0, Math.min(phases.length - 1, index))
-      const target = phases[clamped]
-      stopSpeaking()
-      setPi(clamped)
-      setElapsed(0)
-      if (prefs.chime !== false) {
-        const url = cueForPhase(target, clamped, phases.length)
-        if (url) playCue(url, { gain: 0.5 })
-      }
-      startSpeech(target)
-    },
-    [phases, prefs.chime, startSpeech],
-  )
-
   const finish = useCallback(() => {
+    runRef.current += 1
+    stopVoice()
     setStatus('done')
     stopAll({ fade: 1.5 })
     speakingRef.current = false
     const minutes = Math.max(1, Math.round((Date.now() - (startedAtRef.current || Date.now())) / 60000))
     hyCompleteSession(session.id, { minutes })
   }, [hyCompleteSession, session.id])
+
+  const goToPhase = useCallback(
+    (index) => {
+      const clamped = Math.max(0, Math.min(phases.length - 1, index))
+      const target = phases[clamped]
+      runRef.current += 1
+      stopSpeaking()
+      stopVoice()
+      speakingRef.current = false
+      setPi(clamped)
+      setElapsed(0)
+      setLineIndex(0)
+      if (prefs.chime !== false) {
+        const url = cueForPhase(target, clamped, phases.length)
+        if (url) playCue(url, { gain: 0.5 })
+      }
+      if (voiceMode === 'neural') runPhaseRef.current?.(clamped, 0)
+      else startSpeech(target)
+    },
+    [phases, prefs.chime, startSpeech, voiceMode],
+  )
+
+  // Les enchaînements se rappellent entre eux : on passe par des refs.
+  useEffect(() => {
+    runPhaseRef.current = runPhase
+    goToPhaseRef.current = goToPhase
+    finishRef.current = finish
+  })
 
   // Tic de progression
   useEffect(() => {
@@ -137,15 +289,16 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
     return () => clearInterval(id)
   }, [status])
 
-  // Passage de phase / fin de séance
+  // Passage de phase / fin de séance (hors voix embarquée : la voix pilote)
   useEffect(() => {
     if (status !== 'running') return
+    if (voiceMode === 'neural') return
     if (elapsed < phaseSeconds) return
     if (speakingRef.current || speaking()) return
     if (pi + 1 < phases.length) goToPhase(pi + 1)
     else finish()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elapsed, status, pi, phaseSeconds])
+  }, [elapsed, status, pi, phaseSeconds, voiceMode])
 
   // Volume maître
   useEffect(() => {
@@ -155,6 +308,7 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
   // Nettoyage à la sortie
   useEffect(
     () => () => {
+      runRef.current += 1
       stopAll({ fade: 0.4 })
       speakingRef.current = false
     },
@@ -179,33 +333,41 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
     setStatus('running')
     setPi(0)
     setElapsed(0)
+    setLineIndex(0)
     if (prefs.chime !== false) {
       const url = cueForPhase(phases[0], 0, phases.length)
       if (url) playCue(url, { gain: 0.5 })
     }
-    startSpeech(phases[0])
+    if (voiceMode === 'neural') runPhaseRef.current?.(0, 0)
+    else startSpeech(phases[0])
   }
 
   const pause = () => {
     setStatus('paused')
+    runRef.current += 1
+    stopVoice()
     stopSpeaking()
     speakingRef.current = false
   }
 
   const resume = () => {
     setStatus('running')
-    startSpeech(phase, activeLine)
+    if (voiceMode === 'neural') runPhaseRef.current?.(pi, lineIndex)
+    else startSpeech(phase, activeLine)
   }
 
   const stop = () => {
+    runRef.current += 1
     stopAll({ fade: 0.6 })
     speakingRef.current = false
     setStatus('idle')
     setPi(0)
     setElapsed(0)
+    setLineIndex(0)
   }
 
   const exit = () => {
+    runRef.current += 1
     stopAll({ fade: 0.3 })
     speakingRef.current = false
     onExit?.()
@@ -270,8 +432,8 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
               {session.binaural.carrier} Hz + {session.binaural.beat} Hz
             </Chip>
           )}
-          <Chip tone={voice ? 'jade' : 'slate'} icon={voice ? 'Volume2' : 'VolumeX'}>
-            {voice ? 'Voix activée' : 'Lecture silencieuse'}
+          <Chip tone={voiceOn ? 'jade' : 'slate'} icon={voiceOn ? 'Volume2' : 'VolumeX'}>
+            {voiceMode === 'neural' ? `Voix ${voiceLabel}` : voiceMode === 'device' ? 'Voix du téléphone' : 'Lecture silencieuse'}
           </Chip>
         </div>
         {notice && (
@@ -314,7 +476,7 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
             <p className="mt-1 text-[12.5px] text-ash">
               Phase {pi + 1} / {phases.length} · {Math.round(phaseSeconds)} s · temps restant {formatClock(Math.max(0, total - doneSeconds))}
             </p>
-            <ProgressBar className="mt-3" value={(elapsed / phaseSeconds) * 100} tone={kindMeta.color} height={6} />
+            <ProgressBar className="mt-3" value={phasePct} tone={kindMeta.color} height={6} />
           </div>
         </div>
 
@@ -450,15 +612,21 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
             <div className="flex flex-wrap items-center gap-2 border-t border-gold-500/12 pt-3">
               <button
                 type="button"
-                onClick={() => hySetPrefs({ voice: !voice })}
+                onClick={() => hySetPrefs({ voice: !voiceOn })}
                 className={cx(
                   'flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11.5px] font-semibold transition',
-                  voice ? 'border-emerald-500/35 bg-emerald-500/10 text-emerald-100' : 'border-white/8 bg-white/3 text-ash',
+                  voiceOn ? 'border-emerald-500/35 bg-emerald-500/10 text-emerald-100' : 'border-white/8 bg-white/3 text-ash',
                 )}
-                disabled={!ttsSupported()}
-                title={ttsSupported() ? 'Voix du système' : 'Synthèse vocale indisponible sur cet appareil'}
+                disabled={!canVoice}
+                title={
+                  canVoice
+                    ? voiceMode === 'neural'
+                      ? `Voix embarquée : ${voiceLabel}`
+                      : 'Voix du téléphone'
+                    : 'Aucune voix disponible sur cet appareil'
+                }
               >
-                <Icon name={voice ? 'Volume2' : 'VolumeX'} size={12} /> Voix
+                <Icon name={voiceOn ? 'Volume2' : 'VolumeX'} size={12} /> Voix
               </button>
               <button
                 type="button"
@@ -497,10 +665,24 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
               </label>
             </div>
 
-            {!ttsSupported() && (
+            {voiceMode === 'neural' && (
+              <p className="flex items-start gap-2 text-[11.5px] text-ash">
+                <Icon name="Sparkles" size={13} className="mt-0.5 shrink-0 text-gold-400" />
+                Voix « {voiceLabel} » embarquée dans l'app : douce, humaine, identique sur tous les appareils et disponible
+                hors-ligne. Change de voix ou de rythme dans l'onglet Voix.
+              </p>
+            )}
+            {voiceMode === 'device' && (
               <p className="flex items-start gap-2 text-[11.5px] text-ash">
                 <Icon name="Info" size={13} className="mt-0.5 shrink-0 text-gold-400" />
-                La synthèse vocale n'est pas disponible sur cet appareil : lis le texte à l'écran au rythme des phases. Le repère sonore marque chaque changement.
+                La voix embarquée est indisponible pour cette séance : la synthèse vocale du téléphone prend le relais.
+              </p>
+            )}
+            {!canVoice && (
+              <p className="flex items-start gap-2 text-[11.5px] text-ash">
+                <Icon name="Info" size={13} className="mt-0.5 shrink-0 text-gold-400" />
+                Aucune voix n'est disponible : lis le texte à l'écran au rythme des phases. Le repère sonore marque chaque
+                changement.
               </p>
             )}
             {session.binaural && binauralRunning() && (
@@ -539,7 +721,7 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[12.5px] font-semibold text-gold-100">{p.title}</span>
                   <span className="block text-[10.5px] text-ash">
-                    {meta.label} · {Math.round(p.seconds)} s · {p.lines.length} phrases
+                    {meta.label} · {Math.round(phaseSecondsFor(p))} s · {p.lines.length} phrases
                   </span>
                 </span>
                 {active && <Chip tone="gold">{status === 'running' ? 'En cours' : status === 'paused' ? 'En pause' : 'Phase'}</Chip>}

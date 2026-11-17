@@ -11,7 +11,17 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Icon from '../../components/ui/Icon'
 import { Button, Chip, Panel, ProgressBar, SectionTitle, Stat } from '../../components/ui/Primitives'
 import { useApp } from '../../context/AppContext'
-import { AMBIENCE_LIST, CUE_LIST, HY_KIND_META, HY_MEDIA_LIST, SCRIPT_LIST, TOTAL_HY_BYTES } from '../../data/hypnosis'
+import {
+  AMBIENCE_LIST,
+  CUE_LIST,
+  HY_KIND_META,
+  HY_MEDIA_LIST,
+  NEURAL_VOICE_LIST,
+  SCRIPT_LIST,
+  TOTAL_HY_BYTES,
+  voiceMediaList,
+  voiceStats,
+} from '../../data/hypnosis'
 import {
   STATUS_META,
   bundleStatus,
@@ -22,13 +32,24 @@ import {
   removeMedia,
   storageMode,
 } from '../../lib/offlineMedia'
-import { cx, formatBytes } from '../../lib/utils'
+import { cx, formatBytes, formatMinutes } from '../../lib/utils'
 
 const GROUPS = [
-  { id: 'ambience', label: 'Ambiances', icon: 'Waves', list: AMBIENCE_LIST },
-  { id: 'cue', label: 'Repères sonores', icon: 'BellRing', list: CUE_LIST },
-  { id: 'script', label: 'Scripts de séance', icon: 'FileText', list: SCRIPT_LIST },
+  { id: 'ambience', kind: 'ambience', label: 'Ambiances', icon: 'Waves', list: AMBIENCE_LIST },
+  { id: 'cue', kind: 'cue', label: 'Repères sonores', icon: 'BellRing', list: CUE_LIST },
+  { id: 'script', kind: 'script', label: 'Scripts de séance', icon: 'FileText', list: SCRIPT_LIST },
 ]
+
+/** Les voix comptent des centaines de phrases : on les résume par voix. */
+const VOICE_GROUPS = NEURAL_VOICE_LIST.map((v) => ({
+  id: `voice-${v.id}`,
+  kind: 'voice',
+  label: `Voix ${v.label}`,
+  icon: 'AudioLines',
+  list: voiceMediaList(v.id),
+  compact: true,
+  stats: voiceStats(v.id),
+}))
 
 const StatusChip = ({ status }) => {
   const meta = STATUS_META[status.state] || STATUS_META.missing
@@ -165,8 +186,8 @@ export const HypnosisOffline = () => {
           title="Emporter les séances partout"
           subtitle={
             native
-              ? "Les ambiances, les repères et les scripts sont déjà embarqués dans l'APK : ils se lisent sans réseau. Ce bouton les marque comme disponibles hors-ligne."
-              : "Les ambiances, les repères et les scripts sont générés localement. Télécharge-les une fois pour les avoir sans réseau, à vie."
+              ? "Les ambiances, les repères, les scripts et les voix sont déjà embarqués dans l'APK : ils se lisent sans réseau. Ce bouton les marque comme disponibles hors-ligne."
+              : "Les ambiances, les repères, les scripts et les voix sont générés localement. Télécharge-les une fois pour les avoir sans réseau, à vie."
           }
           icon="HardDrive"
           right={
@@ -253,13 +274,13 @@ export const HypnosisOffline = () => {
         )}
       </Panel>
 
-      {GROUPS.map((group) => {
+      {[...GROUPS, ...VOICE_GROUPS].map((group) => {
         const status = bundleStatus(
           group.list.map((m) => m.id),
           downloads,
           Object.fromEntries(group.list.map((m) => [m.id, m])),
         )
-        const meta = HY_KIND_META[group.id]
+        const meta = HY_KIND_META[group.kind]
         return (
           <Panel key={group.id}>
             <div className="flex items-center gap-3">
@@ -286,47 +307,55 @@ export const HypnosisOffline = () => {
               )}
             </div>
 
-            <div className="mt-3 space-y-1.5 border-t border-gold-500/12 pt-3">
-              {group.list.map((m) => {
-                const stored = Boolean(downloads[m.id])
-                const pct = progressMap[m.id]
-                return (
-                  <div key={m.id} className="flex items-center gap-3">
-                    <Icon name={HY_KIND_META[m.kind]?.icon || 'FileText'} size={13} className="shrink-0" style={{ color: HY_KIND_META[m.kind]?.color }} />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[12px] text-ivory/88">{m.title}</p>
-                      {typeof pct === 'number' && <ProgressBar value={pct} tone="#4a7fd4" height={3} className="mt-1" />}
+            {group.compact ? (
+              <p className="mt-3 border-t border-gold-500/12 pt-3 text-[11.5px] leading-relaxed text-ash">
+                {group.list.length} phrases enregistrées
+                {group.stats ? ` · ${formatMinutes(group.stats.seconds / 60)} de voix` : ''} : chaque phrase est un petit
+                fichier, enchaîné automatiquement par le lecteur. Rien à gérer à la main.
+              </p>
+            ) : (
+              <div className="mt-3 space-y-1.5 border-t border-gold-500/12 pt-3">
+                {group.list.map((m) => {
+                  const stored = Boolean(downloads[m.id])
+                  const pct = progressMap[m.id]
+                  return (
+                    <div key={m.id} className="flex items-center gap-3">
+                      <Icon name={HY_KIND_META[m.kind]?.icon || 'FileText'} size={13} className="shrink-0" style={{ color: HY_KIND_META[m.kind]?.color }} />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[12px] text-ivory/88">{m.title}</p>
+                        {typeof pct === 'number' && <ProgressBar value={pct} tone="#4a7fd4" height={3} className="mt-1" />}
+                      </div>
+                      <span className="shrink-0 font-mono text-[10.5px] text-ash">{formatBytes(downloads[m.id]?.bytes || m.bytes)}</span>
+                      {stored ? (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={async () => {
+                            await removeMedia(m)
+                            hyUnmarkDownload(m.id)
+                            refresh()
+                          }}
+                          className={cx('shrink-0 rounded-lg p-1 transition', busy ? 'text-ash/40' : 'text-emerald-300 hover:text-rose-300')}
+                          title="Retirer de l'appareil"
+                        >
+                          <Icon name={busy ? 'Download' : 'CheckCircle2'} size={14} />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => runBatch([m], m.title)}
+                          className={cx('shrink-0 rounded-lg p-1 transition', busy ? 'text-ash/40' : 'text-ash hover:text-gold-200')}
+                          title="Télécharger"
+                        >
+                          <Icon name="Download" size={14} />
+                        </button>
+                      )}
                     </div>
-                    <span className="shrink-0 font-mono text-[10.5px] text-ash">{formatBytes(downloads[m.id]?.bytes || m.bytes)}</span>
-                    {stored ? (
-                      <button
-                        type="button"
-                        disabled={busy}
-                        onClick={async () => {
-                          await removeMedia(m)
-                          hyUnmarkDownload(m.id)
-                          refresh()
-                        }}
-                        className={cx('shrink-0 rounded-lg p-1 transition', busy ? 'text-ash/40' : 'text-emerald-300 hover:text-rose-300')}
-                        title="Retirer de l'appareil"
-                      >
-                        <Icon name={busy ? 'Download' : 'CheckCircle2'} size={14} />
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        disabled={busy}
-                        onClick={() => runBatch([m], m.title)}
-                        className={cx('shrink-0 rounded-lg p-1 transition', busy ? 'text-ash/40' : 'text-ash hover:text-gold-200')}
-                        title="Télécharger"
-                      >
-                        <Icon name="Download" size={14} />
-                      </button>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
+                  )
+                })}
+              </div>
+            )}
           </Panel>
         )
       })}

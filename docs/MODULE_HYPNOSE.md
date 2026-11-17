@@ -2,7 +2,8 @@
 
 > Séances guidées, voix et ambiances sonores **écrites et générées sur l'appareil**.
 > Aucune API, aucun réseau, aucun fichier tiers : tout le contenu est produit par
-> le dépôt lui-même (`src/data/hypnosis/*.js` + `scripts/generate-hypnosis.mjs`).
+> le dépôt lui-même (`src/data/hypnosis/*.js`, `scripts/generate-hypnosis.mjs`
+> et `scripts/generate-hypnosis-voice.mjs`).
 
 ---
 
@@ -14,19 +15,24 @@ l'accompagne doucement vers une ressource. Le module applique ce principe à
 l'incarnation du « Futur Toi » : détente, concentration, prise de parole, sommeil,
 estime de soi, projection.
 
-Quatre onglets :
+Cinq onglets :
 
 | Onglet | Contenu |
 | --- | --- |
 | **Séances** | Catalogue des 6 séances, recherche, filtre par niveau, séance conseillée, lecture du script intégral |
-| **Hors-ligne** | Téléchargement / vérification des ambiances, repères sonores et scripts |
+| **Voix** | Voix neuronales embarquées (pré-écoute, choix), moteur de voix, longueur des silences |
+| **Hors-ligne** | Téléchargement / vérification des ambiances, repères sonores, scripts et voix |
 | **Ambiances** | Laboratoire : battements binauraux (6 presets), boucles d'ambiance, repères |
 | **Progression** | Statistiques, série de jours, séance conseillée, journal des ressentis, lecture de la pratique |
 
 Le **lecteur de séance** (`SessionPlayer.jsx`) déroule une chronologie de phases,
 affiche le texte ligne par ligne, joue l'ambiance et le battement binaural, et
-lit le texte à voix haute via la **synthèse vocale du système** (fr-FR). À la fin,
-un bilan permet de noter son ressenti (enregistré dans le journal du module).
+lit le texte à voix haute avec la **voix neuronale embarquée** : chaque phrase est
+un petit MP3 livré dans l'application, enchaîné par le lecteur avec un silence
+dosé — c'est ce qui donne le rythme lent et la mise en évidence exacte de la
+phrase lue. Si cette voix est indisponible, le lecteur retombe sur la **synthèse
+vocale du système** (fr-FR), puis sur la **lecture silencieuse**. À la fin, un
+bilan permet de noter son ressenti (enregistré dans le journal du module).
 
 ---
 
@@ -48,13 +54,13 @@ accueil → induction → approfondissement → suggestion → visualisation →
 ```
 
 Une phase porte `{ id, kind, title, seconds, chime, lines[] }`. `lines[]` est le
-texte dit **et** affiché : une seule source de vérité. Si la synthèse vocale est
-indisponible, la séance reste pleinement utilisable en **lecture silencieuse**.
+texte dit **et** affiché : une seule source de vérité. Si aucune voix n'est
+disponible, la séance reste pleinement utilisable en **lecture silencieuse**.
 
-Le rythme est piloté par le lecteur : le texte d'une phase est lu à voix haute ;
-la phase suivante ne démarre qu'une fois la parole terminée (ou le temps écoulé,
-si la voix est coupée). Un **repère sonore** (gong au début, cloche entre les
-phases, bol à l'ancrage, gong à la fin) marque chaque transition.
+Le rythme est piloté par le lecteur : chaque phrase de la phase est lue à voix
+haute ; la phase suivante ne démarre qu'une fois la dernière phrase terminée (ou
+le temps écoulé, si la voix est coupée). Un **repère sonore** (gong au début,
+cloche entre les phases, bol à l'ancrage, gong à la fin) marque chaque transition.
 
 ---
 
@@ -66,9 +72,12 @@ Tout l'état vit dans `state.hypnosis` (voir `src/data/defaults.js → defaultHy
 {
   version: 1,
   prefs: {              // préférences de lecture
-    voice: true,        // synthèse vocale
-    voiceRate: 0.9,
-    voicePitch: 0.95,
+    voiceEngine: 'neural', // 'neural' (embarquée) | 'device' (téléphone) | 'off'
+    voiceId: 'denise',  // voix neuronale choisie (denise | henri)
+    voicePause: 1,      // longueur des silences entre phrases (×)
+    voice: true,        // voix activée
+    voiceRate: 0.9,     // débit de la voix du téléphone
+    voicePitch: 0.95,   // tonalité de la voix du téléphone
     volume: 0.7,        // volume maître (0 → 1)
     ambience: true,     // fond sonore
     binaural: true,     // battement binaural
@@ -108,7 +117,10 @@ L'**export / import** de sauvegarde couvre `hypnosis` automatiquement
 
 ## 4. Contenu sonore : 100 % généré localement
 
-`scripts/generate-hypnosis.mjs` produit **17 fichiers** (~3,1 Mo) dans
+Deux scripts produisent tout le contenu du module, **sans aucun échantillon
+externe**.
+
+`scripts/generate-hypnosis.mjs` → **17 fichiers** (~3,1 Mo) dans
 `public/media/hypnosis/` :
 
 | Famille | Fichiers | Format | Détail |
@@ -122,12 +134,20 @@ Tout est synthétisé par le script (aucun échantillon externe) : bruit filtré
 oscillateurs, enveloppes, réverbération courte. Le WAV mono basse fréquence est
 volontaire : propre, léger, et décodable partout.
 
-> **Régénérer** (après modification des scripts ou des ambiances) :
+`scripts/generate-hypnosis-voice.mjs` → **228 MP3** (~10,7 Mo) dans
+`public/media/hypnosis/voix/` (voir § 6) : **une phrase = un fichier**, pour
+chaque voix. Les MP3 sont produits **une fois pour toutes à la compilation** ;
+au runtime, l'application ne fait que les lire — donc aucune synthèse, aucun
+réseau.
+
+> **Régénérer** (après modification des scripts, des ambiances ou des voix) :
 > ```bash
 > node scripts/generate-hypnosis.mjs
+> node scripts/generate-hypnosis-voice.mjs
 > ```
 
-Le manifeste `src/data/hypnosis/media.js` reflète les octets réels produits.
+Le manifeste `src/data/hypnosis/media.js` reflète les octets réels produits ;
+`src/data/hypnosis/voiceTracks.js` (fichier **généré**) décrit chaque phrase.
 
 ---
 
@@ -142,16 +162,61 @@ Tout passe par **Web Audio**, sans fichier temporaire ni réseau :
   L'effet n'existe **qu'au casque**.
 - **Repères** : lecture du WAV ; en cas d'échec de chargement, repli sur une
   **cloche synthétisée** (`synthChime`) — jamais de silence inattendu.
-- **Voix** : `speechSynthesis` en `fr-FR`, avec sélection d'une voix française de
-  qualité si disponible. `onEnd` est toujours appelé (même en erreur) pour que le
-  lecteur puisse enchaîner.
+- **Voix embarquée** : `playVoiceLine(url)` charge le MP3 (`fetch` +
+  `decodeAudioData`, résultat mis en cache) et le lit via un
+  `AudioBufferSourceNode` → gain → master. La promesse résout `ended` /
+  `stopped` / `error` / `unsupported`, ce qui permet au lecteur d'enchaîner
+  proprement. `stopVoice()` interrompt la phrase en cours (pause, saut de phase,
+  sortie).
+- **Voix du téléphone (repli)** : `speechSynthesis` en `fr-FR`, avec sélection
+  d'une voix française de qualité si disponible. `onEnd` est toujours appelé
+  (même en erreur) pour que le lecteur puisse enchaîner.
 - **Volume maître** : `setMasterVolume` avec rampe linéaire (fade) pour éviter les
   clics. `primeAudio()` doit être appelé sur un geste utilisateur (les WebView
   suspendent l'audio avant interaction).
 
 ---
 
-## 6. Stratégie hors-ligne
+## 6. Voix neuronales embarquées
+
+La voix des séances est **livrée avec l'application** : elle ne dépend plus du
+téléphone et reste **identique partout**.
+
+- **Deux voix** (`NEURAL_VOICES`, généré) :
+
+  | Id | Voix | Genre | Réglage |
+  | --- | --- | --- | --- |
+  | `denise` (défaut) | `fr-FR-DeniseNeural` | Femme | débit −10 %, ton −2 Hz |
+  | `henri` | `fr-FR-HenriNeural` | Homme | débit −12 %, ton −4 Hz |
+
+- **Granularité : une phrase = un MP3.** Le lecteur met les phrases bout à bout
+  et insère lui-même les silences : le tempo est **maîtrisé par l'application**
+  (pas par la synthèse) et la phrase en cours se surligne **exactement**.
+- **Silences** : `PAUSE_BASE` (1,4 s) modulé par le type de phase
+  (`PAUSE_BY_KIND`) — plus longs pendant l'induction et la visualisation — et par
+  la préférence `voicePause` (Courtes / Moyennes / Longues). Un `LEAD_IN` de
+  1,1 s précède la première phrase de chaque phase.
+- **Moteur de voix** (`prefs.voiceEngine`) : `neural` (défaut) → `device`
+  (synthèse du téléphone) → `off` (silencieux). Le repli est **automatique** :
+  si la voix embarquée manque pour une séance ou si Web Audio est absent, le
+  lecteur passe au moteur suivant, et la séance reste toujours utilisable.
+- **Onglet *Voix*** (`VoiceLab.jsx`) : pré-écoute d'un extrait par voix
+  (`sample.mp3`), choix de la voix et du moteur, réglage du débit / de la
+  tonalité de la voix du téléphone, et longueur des silences.
+- **Préchargement** : le lecteur précharge en tâche de fond les phrases de la
+  phase courante **et** de la phase suivante → enchaînements sans blanc.
+
+> **Génération** : `node scripts/generate-hypnosis-voice.mjs` (option `--force`
+> pour tout régénérer). Le script s'appuie sur `msedge-tts` — dépendance **de
+> développement uniquement** : la voix neuronale « Read Aloud » de Microsoft Edge
+> est sollicitée **au moment du build**, puis les MP3 sont embarqués. Au runtime,
+> l'application n'a **aucune** dépendance réseau.
+> Sortie : `public/media/hypnosis/voix/<voix>/<séance>/<phase>-NN.mp3`
+> (+ `sample.mp3` par voix) et le manifeste `src/data/hypnosis/voiceTracks.js`.
+
+---
+
+## 7. Stratégie hors-ligne
 
 Le module réutilise le gestionnaire transversal `src/lib/offlineMedia.js`
 (`downloadBatch`, `bundleStatus`, `isStored`, `removeMedia`, `hasRoomFor`,
@@ -167,12 +232,13 @@ Le module réutilise le gestionnaire transversal `src/lib/offlineMedia.js`
 
 Chaque famille (ambiances / repères / scripts) a son état (`ready`, `partial`,
 `missing`), son poids, un bouton de lot et un bouton de retrait, avec barre de
-progression et messages d'erreur explicites. **Jamais de silence** : chaque action
-donne un retour visible.
+progression et messages d'erreur explicites. Les **voix** (226 phrases) sont
+regroupées **par voix**, sous forme de résumé compact, pour ne pas afficher des
+centaines de lignes. **Jamais de silence** : chaque action donne un retour visible.
 
 ---
 
-## 7. Intégration IA (analyse locale + Studio IA)
+## 8. Intégration IA (analyse locale + Studio IA)
 
 Le module s'appuie sur deux briques transversales, **100 % locales** :
 
@@ -192,7 +258,7 @@ le relais** automatiquement.
 
 ---
 
-## 8. Sécurité & usage responsable
+## 9. Sécurité & usage responsable
 
 > Séance à faire **assis ou allongé, jamais en conduisant**. Les battements
 > binauraux nécessitent un **casque** et ne remplacent aucun soin médical.
@@ -205,27 +271,30 @@ le relais** automatiquement.
 
 ---
 
-## 9. Fichiers du module
+## 10. Fichiers du module
 
 ```
 src/data/hypnosis/
   sessions.js    6 séances complètes (phases, textes, ambiances, binaural)
-  media.js       manifeste des médias (ambiances, repères, scripts)
+  media.js       manifeste des médias (ambiances, repères, scripts, voix)
+  voiceTracks.js manifeste GÉNÉRÉ des voix (phrases, durées, octets)
   presets.js     6 presets binauraux + consigne de sécurité
   index.js       point d'entrée
 
 src/lib/
-  hypnosisAudio.js   moteur Web Audio + synthèse vocale
+  hypnosisAudio.js   moteur Web Audio + voix embarquée + synthèse de repli
   aiAnalysis.js      analyse transversale locale (partagée)
   aiTasks.js         registre des tâches du Studio IA (partagée)
 
 src/modules/hypnosis/
   HypnosisStudio.jsx     racine + onglets + catalogue + modal script
-  SessionPlayer.jsx      lecteur de séance (chronologie, orbe, bilan)
+  SessionPlayer.jsx      lecteur de séance (voix embarquée, chronologie, orbe, bilan)
+  VoiceLab.jsx           onglet Voix (voix embarquées, moteur, rythme)
   AmbienceLab.jsx        laboratoire binaural / ambiances / repères
   HypnosisOffline.jsx    gestionnaire hors-ligne du module
   HypnosisProgress.jsx   statistiques, journal, lecture de la pratique
 
-scripts/generate-hypnosis.mjs   générateur local (WAV + textes + manifeste)
-public/media/hypnosis/          ressources générées
+scripts/generate-hypnosis.mjs        générateur local (WAV + textes + manifeste)
+scripts/generate-hypnosis-voice.mjs  générateur local des voix (MP3, msedge-tts)
+public/media/hypnosis/               ressources générées (dont voix/)
 ```
