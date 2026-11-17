@@ -14,6 +14,7 @@ import { useApp } from '../../context/AppContext'
 import {
   AMBIENCE_LIST,
   CUE_LIST,
+  EXPORT_LIST,
   HY_KIND_META,
   HY_MEDIA_LIST,
   NEURAL_VOICE_LIST,
@@ -30,6 +31,7 @@ import {
   hasRoomFor,
   isNative,
   removeMedia,
+  saveMediaToDevice,
   storageMode,
 } from '../../lib/offlineMedia'
 import { cx, formatBytes, formatMinutes } from '../../lib/utils'
@@ -69,6 +71,7 @@ export const HypnosisOffline = () => {
   const [progressMap, setProgressMap] = useState({})
   const [batchPct, setBatchPct] = useState(null)
   const [busy, setBusy] = useState(false)
+  const [savingId, setSavingId] = useState(null)
   const [stopping, setStopping] = useState(false)
   const stopRef = useRef(false)
   const [lastError, setLastError] = useState('')
@@ -169,6 +172,27 @@ export const HypnosisOffline = () => {
     }
     refresh()
     flash("Contenu retiré de l'appareil.")
+  }
+
+  /** Enregistre un export (MP3/MP4) SUR l'appareil, pour un autre lecteur. */
+  const saveExport = async (m) => {
+    setSavingId(m.id)
+    setLastError('')
+    try {
+      const info = await saveMediaToDevice(m)
+      flash(
+        info.mode === 'download'
+          ? `« ${info.fileName} » téléchargé (${formatBytes(info.bytes)}).`
+          : `« ${info.fileName} » enregistré dans Documents (${formatBytes(info.bytes)}).`,
+      )
+    } catch (err) {
+      const msg = `Enregistrement impossible : ${err?.message || 'erreur inconnue'}`
+      setLastError(msg)
+      flash(msg)
+      console.error('[hypnose] export', err)
+    } finally {
+      setSavingId(null)
+    }
   }
 
   const storageChip =
@@ -273,6 +297,59 @@ export const HypnosisOffline = () => {
           </div>
         )}
       </Panel>
+
+      {EXPORT_LIST.length > 0 && (
+        <Panel>
+          <div className="flex items-center gap-3">
+            <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border"
+              style={{ borderColor: '#cfa85155', color: '#cfa851', background: '#cfa85114' }}
+            >
+              <Icon name="Moon" size={16} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="display truncate text-[15px] text-gold-100">Écoute nocturne — fichiers prêts à écouter</p>
+              <p className="text-[10.5px] text-ash">
+                {EXPORT_LIST.length} fichier(s) · {formatBytes(EXPORT_LIST.reduce((t, m) => t + (m.bytes || 0), 0))}
+              </p>
+            </div>
+          </div>
+          <p className="mt-3 text-[12px] leading-relaxed text-ash">
+            Chaque séance d'endormissement existe aussi en <strong className="text-gold-100">un seul fichier</strong> : un MP3
+            pour le lecteur de musique, un MP4 avec une image calme pour l'écran ou le partage. Enregistre-les sur ton
+            téléphone : ils s'écoutent ensuite en boucle, hors-ligne, dans n'importe quelle application.
+          </p>
+          <div className="mt-3 space-y-2 border-t border-gold-500/12 pt-3">
+            {EXPORT_LIST.map((m) => (
+              <div key={m.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-white/8 bg-white/2 p-3">
+                <Icon name={m.format === 'mp4' ? 'Video' : 'Music'} size={15} className="shrink-0 text-gold-300" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[12.5px] font-semibold text-gold-100">{m.title}</p>
+                  <p className="text-[10.5px] text-ash">
+                    {m.subtitle} · {formatBytes(m.bytes)} · {m.duration}
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  variant="gold"
+                  icon={savingId === m.id ? 'LoaderCircle' : 'Download'}
+                  disabled={savingId === m.id}
+                  onClick={() => saveExport(m)}
+                >
+                  {savingId === m.id ? 'Enregistrement…' : 'Télécharger'}
+                </Button>
+              </div>
+            ))}
+          </div>
+          {native && (
+            <p className="mt-3 flex items-start gap-2 text-[11.5px] text-ash">
+              <Icon name="Info" size={13} className="mt-0.5 shrink-0 text-gold-400" />
+              Sur l'APK, le fichier est écrit dans le dossier « Documents/METHOD » de l'app, puis tu peux le partager
+              (musique, cloud, ordinateur…).
+            </p>
+          )}
+        </Panel>
+      )}
 
       {[...GROUPS, ...VOICE_GROUPS].map((group) => {
         const status = bundleStatus(

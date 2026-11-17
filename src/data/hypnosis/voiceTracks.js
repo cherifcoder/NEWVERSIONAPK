@@ -10,7 +10,7 @@
    Régénérer :  node scripts/generate-hypnosis-voice.mjs
 ------------------------------------------------------------------- */
 
-export const VOICE_GENERATED_AT = "2026-11-17T22:45:21.017Z"
+export const VOICE_GENERATED_AT = "2026-11-17T23:43:59.256Z"
 
 export const VOICE_ENGINE = "Voix neuronales françaises (Microsoft Edge)"
 
@@ -40,16 +40,21 @@ export const VOICE_SAMPLE = {
 
 export const VOICE_TOTALS = {
   "denise": {
-    "seconds": 945.88,
-    "bytes": 5675472,
-    "lines": 113
+    "seconds": 1708.21,
+    "bytes": 10249488,
+    "lines": 192
   },
   "henri": {
-    "seconds": 923.02,
-    "bytes": 5538096,
-    "lines": 113
+    "seconds": 1650.37,
+    "bytes": 9902160,
+    "lines": 192
   }
 }
+
+/** Séances enregistrées en prosodie « berceuse » (plus lentes, plus graves). */
+export const VOICE_SLEEP_SESSIONS = [
+  "hy-travail"
+]
 
 export const VOICE_TRACKS = {
   "denise": {
@@ -833,6 +838,445 @@ export const VOICE_TRACKS = {
         "seconds": 22.94,
         "bytes": 137664
       }
+    },
+    "hy-travail": {
+      "accueil": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/accueil-00.mp3",
+            "seconds": 12.98,
+            "bytes": 77904
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/accueil-01.mp3",
+            "seconds": 13.85,
+            "bytes": 83088
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/accueil-02.mp3",
+            "seconds": 11.35,
+            "bytes": 68112
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/accueil-03.mp3",
+            "seconds": 14.98,
+            "bytes": 89856
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/accueil-04.mp3",
+            "seconds": 4.2,
+            "bytes": 25200
+          }
+        ],
+        "seconds": 57.36,
+        "bytes": 344160
+      },
+      "induction": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-00.mp3",
+            "seconds": 11.83,
+            "bytes": 70992
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-01.mp3",
+            "seconds": 7.8,
+            "bytes": 46800
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-02.mp3",
+            "seconds": 12.14,
+            "bytes": 72864
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-03.mp3",
+            "seconds": 9.05,
+            "bytes": 54288
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-04.mp3",
+            "seconds": 10.13,
+            "bytes": 60768
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-05.mp3",
+            "seconds": 9.53,
+            "bytes": 57168
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-06.mp3",
+            "seconds": 8.06,
+            "bytes": 48384
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-07.mp3",
+            "seconds": 8.28,
+            "bytes": 49680
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-08.mp3",
+            "seconds": 7.44,
+            "bytes": 44640
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-09.mp3",
+            "seconds": 7.15,
+            "bytes": 42912
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-10.mp3",
+            "seconds": 7.2,
+            "bytes": 43200
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/induction-11.mp3",
+            "seconds": 6.65,
+            "bytes": 39888
+          }
+        ],
+        "seconds": 105.26,
+        "bytes": 631584
+      },
+      "approfondissement": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-00.mp3",
+            "seconds": 16.39,
+            "bytes": 98352
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-01.mp3",
+            "seconds": 11.78,
+            "bytes": 70704
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-02.mp3",
+            "seconds": 7.34,
+            "bytes": 44064
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-03.mp3",
+            "seconds": 10.7,
+            "bytes": 64224
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-04.mp3",
+            "seconds": 8.52,
+            "bytes": 51120
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-05.mp3",
+            "seconds": 14.42,
+            "bytes": 86544
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-06.mp3",
+            "seconds": 11.14,
+            "bytes": 66816
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-07.mp3",
+            "seconds": 8.76,
+            "bytes": 52560
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-08.mp3",
+            "seconds": 4.61,
+            "bytes": 27648
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-09.mp3",
+            "seconds": 8.18,
+            "bytes": 49104
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/approfondissement-10.mp3",
+            "seconds": 7.82,
+            "bytes": 46944
+          }
+        ],
+        "seconds": 109.66,
+        "bytes": 658080
+      },
+      "visualisation": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-00.mp3",
+            "seconds": 13.82,
+            "bytes": 82944
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-01.mp3",
+            "seconds": 10.66,
+            "bytes": 63936
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-02.mp3",
+            "seconds": 10.73,
+            "bytes": 64368
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-03.mp3",
+            "seconds": 11.4,
+            "bytes": 68400
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-04.mp3",
+            "seconds": 10.78,
+            "bytes": 64656
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-05.mp3",
+            "seconds": 11.23,
+            "bytes": 67392
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-06.mp3",
+            "seconds": 9.43,
+            "bytes": 56592
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-07.mp3",
+            "seconds": 8.45,
+            "bytes": 50688
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-08.mp3",
+            "seconds": 12.53,
+            "bytes": 75168
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-09.mp3",
+            "seconds": 9.89,
+            "bytes": 59328
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-10.mp3",
+            "seconds": 11.16,
+            "bytes": 66960
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-11.mp3",
+            "seconds": 10.3,
+            "bytes": 61776
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-12.mp3",
+            "seconds": 11.4,
+            "bytes": 68400
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-13.mp3",
+            "seconds": 10.99,
+            "bytes": 65952
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-14.mp3",
+            "seconds": 13.44,
+            "bytes": 80640
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-15.mp3",
+            "seconds": 12.07,
+            "bytes": 72432
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-16.mp3",
+            "seconds": 10.54,
+            "bytes": 63216
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-17.mp3",
+            "seconds": 13.56,
+            "bytes": 81360
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-18.mp3",
+            "seconds": 11.33,
+            "bytes": 67968
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/visualisation-19.mp3",
+            "seconds": 7.54,
+            "bytes": 45216
+          }
+        ],
+        "seconds": 221.25,
+        "bytes": 1327392
+      },
+      "suggestion": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-00.mp3",
+            "seconds": 9.43,
+            "bytes": 56592
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-01.mp3",
+            "seconds": 10.46,
+            "bytes": 62784
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-02.mp3",
+            "seconds": 10.03,
+            "bytes": 60192
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-03.mp3",
+            "seconds": 10.06,
+            "bytes": 60336
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-04.mp3",
+            "seconds": 9.91,
+            "bytes": 59472
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-05.mp3",
+            "seconds": 8.64,
+            "bytes": 51840
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-06.mp3",
+            "seconds": 9.72,
+            "bytes": 58320
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-07.mp3",
+            "seconds": 9.1,
+            "bytes": 54576
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-08.mp3",
+            "seconds": 9.89,
+            "bytes": 59328
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-09.mp3",
+            "seconds": 11.5,
+            "bytes": 68976
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-10.mp3",
+            "seconds": 8.86,
+            "bytes": 53136
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-11.mp3",
+            "seconds": 9.55,
+            "bytes": 57312
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-12.mp3",
+            "seconds": 9.14,
+            "bytes": 54864
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-13.mp3",
+            "seconds": 5.76,
+            "bytes": 34560
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-14.mp3",
+            "seconds": 6.72,
+            "bytes": 40320
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/suggestion-15.mp3",
+            "seconds": 7.2,
+            "bytes": 43200
+          }
+        ],
+        "seconds": 145.97,
+        "bytes": 875808
+      },
+      "ancrage": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/ancrage-00.mp3",
+            "seconds": 6.29,
+            "bytes": 37728
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/ancrage-01.mp3",
+            "seconds": 9.58,
+            "bytes": 57456
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/ancrage-02.mp3",
+            "seconds": 10.73,
+            "bytes": 64368
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/ancrage-03.mp3",
+            "seconds": 4.99,
+            "bytes": 29952
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/ancrage-04.mp3",
+            "seconds": 8.42,
+            "bytes": 50544
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/ancrage-05.mp3",
+            "seconds": 6.91,
+            "bytes": 41472
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/ancrage-06.mp3",
+            "seconds": 12.12,
+            "bytes": 72720
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/ancrage-07.mp3",
+            "seconds": 6.62,
+            "bytes": 39744
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/ancrage-08.mp3",
+            "seconds": 6.82,
+            "bytes": 40896
+          }
+        ],
+        "seconds": 72.48,
+        "bytes": 434880
+      },
+      "silence": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/silence-00.mp3",
+            "seconds": 9.67,
+            "bytes": 58032
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/silence-01.mp3",
+            "seconds": 5.62,
+            "bytes": 33696
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/silence-02.mp3",
+            "seconds": 6.48,
+            "bytes": 38880
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/silence-03.mp3",
+            "seconds": 10.87,
+            "bytes": 65232
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/silence-04.mp3",
+            "seconds": 9.24,
+            "bytes": 55440
+          },
+          {
+            "src": "./media/hypnosis/voix/denise/hy-travail/silence-05.mp3",
+            "seconds": 8.47,
+            "bytes": 50832
+          }
+        ],
+        "seconds": 50.35,
+        "bytes": 302112
+      }
     }
   },
   "henri": {
@@ -1615,6 +2059,445 @@ export const VOICE_TRACKS = {
         ],
         "seconds": 22.05,
         "bytes": 132336
+      }
+    },
+    "hy-travail": {
+      "accueil": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/accueil-00.mp3",
+            "seconds": 12.26,
+            "bytes": 73584
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/accueil-01.mp3",
+            "seconds": 13.13,
+            "bytes": 78768
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/accueil-02.mp3",
+            "seconds": 11.02,
+            "bytes": 66096
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/accueil-03.mp3",
+            "seconds": 14.06,
+            "bytes": 84384
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/accueil-04.mp3",
+            "seconds": 3.74,
+            "bytes": 22464
+          }
+        ],
+        "seconds": 54.21,
+        "bytes": 325296
+      },
+      "induction": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-00.mp3",
+            "seconds": 11.62,
+            "bytes": 69696
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-01.mp3",
+            "seconds": 7.54,
+            "bytes": 45216
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-02.mp3",
+            "seconds": 11.69,
+            "bytes": 70128
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-03.mp3",
+            "seconds": 8.95,
+            "bytes": 53712
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-04.mp3",
+            "seconds": 10.01,
+            "bytes": 60048
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-05.mp3",
+            "seconds": 8.83,
+            "bytes": 52992
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-06.mp3",
+            "seconds": 7.73,
+            "bytes": 46368
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-07.mp3",
+            "seconds": 8.14,
+            "bytes": 48816
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-08.mp3",
+            "seconds": 7.1,
+            "bytes": 42624
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-09.mp3",
+            "seconds": 6.89,
+            "bytes": 41328
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-10.mp3",
+            "seconds": 6.91,
+            "bytes": 41472
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/induction-11.mp3",
+            "seconds": 6.1,
+            "bytes": 36576
+          }
+        ],
+        "seconds": 101.51,
+        "bytes": 608976
+      },
+      "approfondissement": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-00.mp3",
+            "seconds": 15.41,
+            "bytes": 92448
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-01.mp3",
+            "seconds": 11.16,
+            "bytes": 66960
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-02.mp3",
+            "seconds": 7.15,
+            "bytes": 42912
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-03.mp3",
+            "seconds": 10.25,
+            "bytes": 61488
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-04.mp3",
+            "seconds": 8.11,
+            "bytes": 48672
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-05.mp3",
+            "seconds": 13.78,
+            "bytes": 82656
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-06.mp3",
+            "seconds": 10.61,
+            "bytes": 63648
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-07.mp3",
+            "seconds": 8.35,
+            "bytes": 50112
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-08.mp3",
+            "seconds": 4.3,
+            "bytes": 25776
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-09.mp3",
+            "seconds": 7.7,
+            "bytes": 46224
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/approfondissement-10.mp3",
+            "seconds": 7.68,
+            "bytes": 46080
+          }
+        ],
+        "seconds": 104.5,
+        "bytes": 626976
+      },
+      "visualisation": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-00.mp3",
+            "seconds": 13.2,
+            "bytes": 79200
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-01.mp3",
+            "seconds": 9.91,
+            "bytes": 59472
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-02.mp3",
+            "seconds": 10.15,
+            "bytes": 60912
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-03.mp3",
+            "seconds": 10.9,
+            "bytes": 65376
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-04.mp3",
+            "seconds": 10.63,
+            "bytes": 63792
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-05.mp3",
+            "seconds": 10.68,
+            "bytes": 64080
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-06.mp3",
+            "seconds": 8.83,
+            "bytes": 52992
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-07.mp3",
+            "seconds": 7.92,
+            "bytes": 47520
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-08.mp3",
+            "seconds": 11.76,
+            "bytes": 70560
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-09.mp3",
+            "seconds": 9.24,
+            "bytes": 55440
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-10.mp3",
+            "seconds": 10.3,
+            "bytes": 61776
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-11.mp3",
+            "seconds": 10.01,
+            "bytes": 60048
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-12.mp3",
+            "seconds": 10.87,
+            "bytes": 65232
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-13.mp3",
+            "seconds": 10.44,
+            "bytes": 62640
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-14.mp3",
+            "seconds": 12.6,
+            "bytes": 75600
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-15.mp3",
+            "seconds": 11.26,
+            "bytes": 67536
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-16.mp3",
+            "seconds": 9.89,
+            "bytes": 59328
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-17.mp3",
+            "seconds": 12.55,
+            "bytes": 75312
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-18.mp3",
+            "seconds": 10.87,
+            "bytes": 65232
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/visualisation-19.mp3",
+            "seconds": 7.1,
+            "bytes": 42624
+          }
+        ],
+        "seconds": 209.11,
+        "bytes": 1254672
+      },
+      "suggestion": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-00.mp3",
+            "seconds": 9.02,
+            "bytes": 54144
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-01.mp3",
+            "seconds": 9.98,
+            "bytes": 59904
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-02.mp3",
+            "seconds": 9.5,
+            "bytes": 57024
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-03.mp3",
+            "seconds": 9.58,
+            "bytes": 57456
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-04.mp3",
+            "seconds": 9.53,
+            "bytes": 57168
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-05.mp3",
+            "seconds": 8.28,
+            "bytes": 49680
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-06.mp3",
+            "seconds": 9.24,
+            "bytes": 55440
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-07.mp3",
+            "seconds": 8.93,
+            "bytes": 53568
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-08.mp3",
+            "seconds": 9.53,
+            "bytes": 57168
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-09.mp3",
+            "seconds": 10.94,
+            "bytes": 65664
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-10.mp3",
+            "seconds": 8.83,
+            "bytes": 52992
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-11.mp3",
+            "seconds": 9.19,
+            "bytes": 55152
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-12.mp3",
+            "seconds": 8.78,
+            "bytes": 52704
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-13.mp3",
+            "seconds": 5.81,
+            "bytes": 34848
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-14.mp3",
+            "seconds": 6.34,
+            "bytes": 38016
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/suggestion-15.mp3",
+            "seconds": 6.86,
+            "bytes": 41184
+          }
+        ],
+        "seconds": 140.34,
+        "bytes": 842112
+      },
+      "ancrage": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/ancrage-00.mp3",
+            "seconds": 5.88,
+            "bytes": 35280
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/ancrage-01.mp3",
+            "seconds": 9,
+            "bytes": 54000
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/ancrage-02.mp3",
+            "seconds": 10.2,
+            "bytes": 61200
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/ancrage-03.mp3",
+            "seconds": 4.87,
+            "bytes": 29232
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/ancrage-04.mp3",
+            "seconds": 7.9,
+            "bytes": 47376
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/ancrage-05.mp3",
+            "seconds": 6.82,
+            "bytes": 40896
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/ancrage-06.mp3",
+            "seconds": 11.45,
+            "bytes": 68688
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/ancrage-07.mp3",
+            "seconds": 6.26,
+            "bytes": 37584
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/ancrage-08.mp3",
+            "seconds": 6.72,
+            "bytes": 40320
+          }
+        ],
+        "seconds": 69.1,
+        "bytes": 414576
+      },
+      "silence": {
+        "lines": [
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/silence-00.mp3",
+            "seconds": 9.31,
+            "bytes": 55872
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/silence-01.mp3",
+            "seconds": 5.33,
+            "bytes": 31968
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/silence-02.mp3",
+            "seconds": 5.98,
+            "bytes": 35856
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/silence-03.mp3",
+            "seconds": 10.82,
+            "bytes": 64944
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/silence-04.mp3",
+            "seconds": 8.74,
+            "bytes": 52416
+          },
+          {
+            "src": "./media/hypnosis/voix/henri/hy-travail/silence-05.mp3",
+            "seconds": 8.4,
+            "bytes": 50400
+          }
+        ],
+        "seconds": 48.58,
+        "bytes": 291456
       }
     }
   }

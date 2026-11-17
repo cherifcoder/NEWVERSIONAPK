@@ -62,6 +62,14 @@ const VOICES = [
   },
 ]
 
+/* Prosodie « berceuse » : les séances d'endormissement sont enregistrées
+   exprès plus lentes et plus graves, pour une voix très douce, au bord du
+   sommeil. Les autres séances gardent la prosodie de base de la voix. */
+const SLEEP_PROSODY = {
+  'hy-travail': { rate: '-22%', pitch: '-8Hz' },
+}
+const SLEEP_SESSIONS = Object.keys(SLEEP_PROSODY)
+
 const SAMPLE_TEXT =
   "Bienvenue. Ferme les yeux, laisse ta respiration trouver son rythme, et laisse ma voix t'accompagner."
 
@@ -148,6 +156,7 @@ const main = async () => {
       tracks[v.id][s.id] = {}
       const sDir = join(vDir, s.id)
       mkdirSync(sDir, { recursive: true })
+      const sProsody = { ...prosody, ...(SLEEP_PROSODY[s.id] || {}) }
       for (const p of s.phases) {
         const lines = []
         let pBytes = 0
@@ -155,7 +164,7 @@ const main = async () => {
         for (let i = 0; i < p.lines.length; i += 1) {
           const rel = `./media/hypnosis/voix/${v.id}/${s.id}/${p.id}-${String(i).padStart(2, '0')}.mp3`
           const abs = join(ROOT, 'public', rel.replace('./', ''))
-          const bytes = await renderTo(tts, p.lines[i], prosody, abs)
+          const bytes = await renderTo(tts, p.lines[i], sProsody, abs)
           const seconds = bytesToSeconds(bytes)
           lines.push({ src: rel, seconds, bytes })
           pBytes += bytes
@@ -208,6 +217,8 @@ const main = async () => {
     `export const NEURAL_VOICES = ${JSON.stringify(voicesMeta, null, 2)}\n\n` +
     `export const VOICE_SAMPLE = ${JSON.stringify(samples, null, 2)}\n\n` +
     `export const VOICE_TOTALS = ${JSON.stringify(totals, null, 2)}\n\n` +
+    `/** Séances enregistrées en prosodie « berceuse » (plus lentes, plus graves). */\n` +
+    `export const VOICE_SLEEP_SESSIONS = ${JSON.stringify(SLEEP_SESSIONS, null, 2)}\n\n` +
     `export const VOICE_TRACKS = ${JSON.stringify(tracks, null, 2)}\n`
 
   writeFileSync(MODULE_OUT, moduleSrc, 'utf8')

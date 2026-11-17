@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-17T21:24:23.301Z",
+  "generatedAt": "2026-11-17T23:43:42.126Z",
   "note": "Médias du module hypnose éricksonienne — générés localement, aucune API.",
   "format": {
     "codec": "pcm_s16le",
@@ -7,13 +7,13 @@
     "channels": 1
   },
   "totals": {
-    "files": 16,
+    "files": 17,
     "ambBytes": 2679290,
     "cueBytes": 533830,
-    "txtBytes": 17723,
-    "totalBytes": 3230843
+    "txtBytes": 27629,
+    "totalBytes": 3240749
   },
-  "sessions": 6,
+  "sessions": 7,
   "files": [
     {
       "path": "media/hypnosis/ambience/nappe-basse.wav",
@@ -78,6 +78,10 @@
     {
       "path": "media/hypnosis/voix/hy-futur.txt",
       "bytes": 3030
+    },
+    {
+      "path": "media/hypnosis/voix/hy-travail.txt",
+      "bytes": 9906
     }
   ],
   "declared": [
@@ -85,113 +89,120 @@
       "id": "hy-amb-nappe-basse",
       "kind": "ambience",
       "src": "media/hypnosis/ambience/nappe-basse.wav",
-      "declaredBytes": 529200,
+      "declaredBytes": 535858,
       "actualBytes": 535858
     },
     {
       "id": "hy-amb-pluie-douce",
       "kind": "ambience",
       "src": "media/hypnosis/ambience/pluie-douce.wav",
-      "declaredBytes": 529200,
+      "declaredBytes": 535858,
       "actualBytes": 535858
     },
     {
       "id": "hy-amb-vagues",
       "kind": "ambience",
       "src": "media/hypnosis/ambience/vagues.wav",
-      "declaredBytes": 529200,
+      "declaredBytes": 535858,
       "actualBytes": 535858
     },
     {
       "id": "hy-amb-foret-nuit",
       "kind": "ambience",
       "src": "media/hypnosis/ambience/foret-nuit.wav",
-      "declaredBytes": 529200,
+      "declaredBytes": 535858,
       "actualBytes": 535858
     },
     {
       "id": "hy-amb-feu-doux",
       "kind": "ambience",
       "src": "media/hypnosis/ambience/feu-doux.wav",
-      "declaredBytes": 529200,
+      "declaredBytes": 535858,
       "actualBytes": 535858
     },
     {
       "id": "hy-son-cloche-claire",
       "kind": "cue",
       "src": "media/hypnosis/sons/cloche-claire.wav",
-      "declaredBytes": 77175,
+      "declaredBytes": 79424,
       "actualBytes": 79424
     },
     {
       "id": "hy-son-gong-doux",
       "kind": "cue",
       "src": "media/hypnosis/sons/gong-doux.wav",
-      "declaredBytes": 110250,
+      "declaredBytes": 114704,
       "actualBytes": 114704
     },
     {
       "id": "hy-son-bol-tibetain",
       "kind": "cue",
       "src": "media/hypnosis/sons/bol-tibetain.wav",
-      "declaredBytes": 132300,
+      "declaredBytes": 141164,
       "actualBytes": 141164
     },
     {
       "id": "hy-son-souffle-entree",
       "kind": "cue",
       "src": "media/hypnosis/sons/souffle-entree.wav",
-      "declaredBytes": 88200,
+      "declaredBytes": 88244,
       "actualBytes": 88244
     },
     {
       "id": "hy-son-souffle-sortie",
       "kind": "cue",
       "src": "media/hypnosis/sons/souffle-sortie.wav",
-      "declaredBytes": 110250,
+      "declaredBytes": 110294,
       "actualBytes": 110294
     },
     {
       "id": "hy-txt-hy-induction",
       "kind": "script",
       "src": "media/hypnosis/voix/hy-induction.txt",
-      "declaredBytes": 5120,
+      "declaredBytes": 3200,
       "actualBytes": 3118
     },
     {
       "id": "hy-txt-hy-escalier",
       "kind": "script",
       "src": "media/hypnosis/voix/hy-escalier.txt",
-      "declaredBytes": 5120,
+      "declaredBytes": 3200,
       "actualBytes": 2460
     },
     {
       "id": "hy-txt-hy-scene",
       "kind": "script",
       "src": "media/hypnosis/voix/hy-scene.txt",
-      "declaredBytes": 5120,
+      "declaredBytes": 3200,
       "actualBytes": 3189
     },
     {
       "id": "hy-txt-hy-focus",
       "kind": "script",
       "src": "media/hypnosis/voix/hy-focus.txt",
-      "declaredBytes": 5120,
+      "declaredBytes": 3200,
       "actualBytes": 2741
     },
     {
       "id": "hy-txt-hy-sommeil",
       "kind": "script",
       "src": "media/hypnosis/voix/hy-sommeil.txt",
-      "declaredBytes": 5120,
+      "declaredBytes": 3200,
       "actualBytes": 3185
     },
     {
       "id": "hy-txt-hy-futur",
       "kind": "script",
       "src": "media/hypnosis/voix/hy-futur.txt",
-      "declaredBytes": 5120,
+      "declaredBytes": 3200,
       "actualBytes": 3030
+    },
+    {
+      "id": "hy-txt-hy-travail",
+      "kind": "script",
+      "src": "media/hypnosis/voix/hy-travail.txt",
+      "declaredBytes": 3200,
+      "actualBytes": 9906
     }
   ]
 }

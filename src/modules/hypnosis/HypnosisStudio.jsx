@@ -202,6 +202,11 @@ export const HypnosisStudio = () => {
                           {s.binaural.beat} Hz
                         </Chip>
                       )}
+                      {s.sleep && (
+                        <Chip tone="sapphire" icon="Moon">
+                          Nuit
+                        </Chip>
+                      )}
                     </div>
 
                     {(s.tags || []).length > 0 && (

@@ -19,6 +19,7 @@ import {
   NEURAL_VOICE_DEFAULT,
   NEURAL_VOICE_LIST,
   ambienceFor,
+  exportMediaFor,
   voiceTrack,
 } from '../../data/hypnosis/media'
 import { PHASE_KIND } from '../../data/hypnosis/sessions'
@@ -41,7 +42,8 @@ import {
   stopVoice,
   ttsSupported,
 } from '../../lib/hypnosisAudio'
-import { cx, formatClock, formatMinutes } from '../../lib/utils'
+import { cx, formatClock, formatBytes, formatMinutes } from '../../lib/utils'
+import { saveMediaToDevice } from '../../lib/offlineMedia'
 
 const MOODS = [
   { id: 'calme', label: 'Calme', icon: 'Waves', tone: 'jade' },
@@ -75,6 +77,16 @@ const PAUSE_BY_KIND = {
 }
 const LEAD_IN = 1100
 
+/** Durées proposées par le minuteur de sommeil (0 = laisser la séance se terminer). */
+const SLEEP_TIMER_OPTIONS = [
+  { value: 0, label: 'Fin de séance' },
+  { value: 15, label: '15 min' },
+  { value: 30, label: '30 min' },
+  { value: 45, label: '45 min' },
+  { value: 60, label: '1 h' },
+  { value: 90, label: '1 h 30' },
+]
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
@@ -89,6 +101,8 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
   const [note, setNote] = useState('')
   const [saved, setSaved] = useState(false)
   const [notice, setNotice] = useState('')
+  const [sleepLeft, setSleepLeft] = useState(null) // minuteur de sommeil : secondes restantes (null = inactif)
+  const [savingId, setSavingId] = useState(null) // export en cours d'enregistrement
 
   const speakingRef = useRef(false)
   const startedAtRef = useRef(null)
@@ -98,6 +112,7 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
   const finishRef = useRef(null)
 
   const phases = session.phases
+  const exportsFor = exportMediaFor(session.id)
 
   /* ---------------------- Moteur de voix ---------------------- */
 
@@ -129,6 +144,7 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
   const ambienceOn = prefs.ambience !== false
   const binauralOn = prefs.binaural !== false
   const volume = typeof prefs.volume === 'number' ? prefs.volume : 0.7
+  const sleepPref = typeof prefs.sleepTimer === 'number' ? prefs.sleepTimer : 0
 
   /* ---------------------- Durées ---------------------- */
 
@@ -250,6 +266,7 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
     setStatus('done')
     stopAll({ fade: 1.5 })
     speakingRef.current = false
+    setSleepLeft(null)
     const minutes = Math.max(1, Math.round((Date.now() - (startedAtRef.current || Date.now())) / 60000))
     hyCompleteSession(session.id, { minutes })
   }, [hyCompleteSession, session.id])
@@ -282,12 +299,39 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
     finishRef.current = finish
   })
 
-  // Tic de progression
+  // Tic de progression (et décompte du minuteur de sommeil)
   useEffect(() => {
     if (status !== 'running') return undefined
-    const id = setInterval(() => setElapsed((e) => e + 0.25), 250)
+    const id = setInterval(() => {
+      setElapsed((e) => e + 0.25)
+      setSleepLeft((s) => (s === null ? null : Math.max(0, s - 0.25)))
+    }, 250)
     return () => clearInterval(id)
   }, [status])
+
+  // Minuteur de sommeil : arrêt en douceur quand le temps choisi est écoulé.
+  const sleepStop = useCallback(() => {
+    runRef.current += 1
+    stopVoice({ fade: 6 })
+    stopSpeaking()
+    stopAll({ fade: 5 })
+    speakingRef.current = false
+    setStatus('idle')
+    setPi(0)
+    setElapsed(0)
+    setLineIndex(0)
+    setSleepLeft(null)
+    setNotice(
+      sleepPref > 0
+        ? `Minuteur de sommeil : lecture arrêtée en douceur après ${formatMinutes(sleepPref)}. Bonne nuit.`
+        : 'Lecture arrêtée.',
+    )
+  }, [sleepPref])
+
+  useEffect(() => {
+    if (status !== 'running' || sleepLeft === null || sleepLeft > 0) return
+    sleepStop()
+  }, [status, sleepLeft, sleepStop])
 
   // Passage de phase / fin de séance (hors voix embarquée : la voix pilote)
   useEffect(() => {
@@ -334,6 +378,7 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
     setPi(0)
     setElapsed(0)
     setLineIndex(0)
+    setSleepLeft(sleepPref > 0 ? sleepPref * 60 : null)
     if (prefs.chime !== false) {
       const url = cueForPhase(phases[0], 0, phases.length)
       if (url) playCue(url, { gain: 0.5 })
@@ -364,6 +409,7 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
     setPi(0)
     setElapsed(0)
     setLineIndex(0)
+    setSleepLeft(null)
   }
 
   const exit = () => {
@@ -395,6 +441,32 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
   const saveJournal = () => {
     hyAddJournalEntry({ sessionId: session.id, mood, note: note.trim() })
     setSaved(true)
+  }
+
+  /** Règle le minuteur de sommeil (0 = laisser la séance se terminer seule). */
+  const setSleepTimer = (min) => {
+    hySetPrefs({ sleepTimer: min })
+    setSleepLeft(min > 0 ? min * 60 : null)
+    if (min > 0) setNotice(`Minuteur de sommeil réglé sur ${formatMinutes(min)} : la lecture s'arrêtera toute seule.`)
+    else setNotice('')
+  }
+
+  /** Enregistre un fichier « prêt à écouter » (MP3/MP4) sur l'appareil. */
+  const saveExport = async (m) => {
+    setSavingId(m.id)
+    try {
+      const info = await saveMediaToDevice(m)
+      setNotice(
+        info.mode === 'download'
+          ? `« ${info.fileName} » téléchargé : ouvre-le dans ton lecteur de musique, en boucle, au lit.`
+          : `« ${info.fileName} » enregistré dans Documents/METHOD (${formatBytes(info.bytes)}).`,
+      )
+    } catch (err) {
+      setNotice(`Enregistrement impossible : ${err?.message || 'erreur inconnue'}`)
+      console.error('[hypnose] export', err)
+    } finally {
+      setSavingId(null)
+    }
   }
 
   const kindMeta = PHASE_KIND[phase?.kind] || PHASE_KIND.suggestion
@@ -430,6 +502,11 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
           {session.binaural && (
             <Chip tone="sapphire" icon="AudioLines">
               {session.binaural.carrier} Hz + {session.binaural.beat} Hz
+            </Chip>
+          )}
+          {session.sleep && (
+            <Chip tone="sapphire" icon="Moon">
+              Endormissement
             </Chip>
           )}
           <Chip tone={voiceOn ? 'jade' : 'slate'} icon={voiceOn ? 'Volume2' : 'VolumeX'}>
@@ -665,6 +742,45 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
               </label>
             </div>
 
+            {/* Minuteur de sommeil */}
+            <div className="flex flex-wrap items-center gap-2 border-t border-gold-500/12 pt-3">
+              <span className="flex items-center gap-1.5 text-[11.5px] font-semibold text-gold-200/90">
+                <Icon name="Moon" size={13} /> Minuteur de sommeil
+              </span>
+              {SLEEP_TIMER_OPTIONS.map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => setSleepTimer(o.value)}
+                  className={cx(
+                    'rounded-full border px-3 py-1.5 text-[11.5px] font-semibold transition',
+                    sleepPref === o.value
+                      ? 'border-gold-500/45 bg-gold-500/15 text-gold-100'
+                      : 'border-white/8 bg-white/3 text-ash hover:text-ivory',
+                  )}
+                >
+                  {o.label}
+                </button>
+              ))}
+              {status === 'running' && sleepLeft !== null && (
+                <Chip tone="gold" icon="Hourglass">
+                  Arrêt dans {formatClock(sleepLeft)}
+                </Chip>
+              )}
+            </div>
+            <p className="flex items-start gap-2 text-[11.5px] text-ash">
+              <Icon name="Info" size={13} className="mt-0.5 shrink-0 text-gold-400" />
+              « Fin de séance » laisse la lecture aller jusqu'au bout. Choisis une durée pour un endormissement : la voix
+              s'éteint alors toute seule, en douceur, sans que tu aies à toucher au téléphone.
+            </p>
+
+            {session.sleep && (
+              <p className="flex items-start gap-2 text-[11.5px] text-ash">
+                <Icon name="Moon" size={13} className="mt-0.5 shrink-0 text-gold-400" />
+                Séance d'endormissement : tu peux t'endormir avant la fin, l'inconscient continue d'écouter. Voix «
+                berceuse » — enregistrée exprès plus lente et plus grave.
+              </p>
+            )}
             {voiceMode === 'neural' && (
               <p className="flex items-start gap-2 text-[11.5px] text-ash">
                 <Icon name="Sparkles" size={13} className="mt-0.5 shrink-0 text-gold-400" />
@@ -694,6 +810,40 @@ export const SessionPlayer = ({ session, onExit, onNext, hasNext }) => {
           </div>
         )}
       </Panel>
+
+      {/* ---------------- Écoute nocturne (fichiers prêts à écouter) ---------------- */}
+      {exportsFor.length > 0 && (
+        <Panel flat>
+          <SectionTitle
+            eyebrow="Écoute nocturne"
+            title="Emporter la séance"
+            subtitle="Un fichier unique, à écouter en boucle dans n'importe quel lecteur — même hors-ligne."
+            icon="Moon"
+          />
+          <div className="mt-3 space-y-2">
+            {exportsFor.map((m) => (
+              <div key={m.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-white/8 bg-white/2 p-3">
+                <Icon name={m.format === 'mp4' ? 'Video' : 'Music'} size={15} className="shrink-0 text-gold-300" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[12.5px] font-semibold text-gold-100">{m.title}</p>
+                  <p className="text-[10.5px] text-ash">
+                    {m.subtitle} · {formatBytes(m.bytes)} · {m.duration}
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  variant="gold"
+                  icon={savingId === m.id ? 'LoaderCircle' : 'Download'}
+                  disabled={savingId === m.id}
+                  onClick={() => saveExport(m)}
+                >
+                  {savingId === m.id ? 'Enregistrement…' : 'Télécharger'}
+                </Button>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      )}
 
       {/* ---------------- Chronologie ---------------- */}
       <Panel flat>

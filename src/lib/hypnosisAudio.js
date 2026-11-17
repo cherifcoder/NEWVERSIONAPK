@@ -137,13 +137,37 @@ export const playVoiceLine = async (url, { playbackRate = 1, gain = 1 } = {}) =>
   })
 }
 
-export const stopVoice = () => {
+/**
+ * Coupe la voix en cours.
+ *   • `fade` = 0 (défaut) : coupure immédiate (pause, arrêt manuel).
+ *   • `fade` > 0 : la voix s'éteint en douceur (minuteur de sommeil) — utile
+ *     pour ne pas réveiller quelqu'un qui vient de s'endormir.
+ */
+export const stopVoice = ({ fade = 0 } = {}) => {
   runtime.voiceToken += 1
   const s = runtime.voice
   runtime.voice = null
   if (!s) return
   try {
     s.onended = null
+    if (fade > 0 && ctx && voiceGain) {
+      const now = ctx.currentTime
+      const g = voiceGain
+      g.gain.cancelScheduledValues(now)
+      g.gain.setValueAtTime(g.gain.value, now)
+      g.gain.linearRampToValueAtTime(0.0001, now + fade)
+      s.stop(now + fade)
+      // Le gain est partagé : on le remet à 1 une fois le fondu terminé.
+      setTimeout(() => {
+        try {
+          g.gain.cancelScheduledValues(g.context.currentTime)
+          g.gain.value = 1
+        } catch {
+          /* contexte fermé */
+        }
+      }, (fade + 0.2) * 1000)
+      return
+    }
     s.stop()
   } catch {
     /* déjà arrêtée */

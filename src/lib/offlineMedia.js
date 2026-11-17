@@ -393,3 +393,60 @@ export const STATUS_META = {
   downloading: { label: 'Téléchargement…', tone: 'sapphire', icon: 'Download' },
   error: { label: 'Échec', tone: 'blood', icon: 'AlertTriangle' },
 }
+
+/* ----------------------- Export vers l'appareil ----------------------- */
+
+const blobToBase64 = (blob) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(String(reader.result || '').split(',')[1] || '')
+    reader.onerror = () => reject(new Error('Lecture du fichier impossible'))
+    reader.readAsDataURL(blob)
+  })
+
+/**
+ * Enregistre un média SUR l'appareil, pour l'écouter dans un autre lecteur
+ * (musique, lecteur vidéo) — c'est le bouton « Télécharger » de l'onglet
+ * Hors-ligne.
+ *
+ *   • Web  : déclenche un téléchargement classique du navigateur.
+ *   • Natif : lit les octets avec fetch (le WebView répond sur
+ *     https://localhost — on n'utilise donc JAMAIS Filesystem.downloadFile,
+ *     voir la note en tête de fichier), écrit le fichier dans le dossier
+ *     Documents de l'app, puis propose le partage.
+ *
+ * Renvoie { mode, fileName, bytes, uri? }.
+ */
+export const saveMediaToDevice = async (media) => {
+  if (!media?.src) throw new Error('Média sans source')
+  const url = absoluteUrl(media.src)
+  const fileName = media.fileName || safeName(media.src)
+
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Fichier indisponible (${res.status})`)
+  const blob = await res.blob()
+
+  if (!isNative()) {
+    const href = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = href
+    a.download = fileName
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    setTimeout(() => URL.revokeObjectURL(href), 60000)
+    return { mode: 'download', fileName, bytes: blob.size }
+  }
+
+  const base64 = await blobToBase64(blob)
+  const path = `METHOD/${fileName}`
+  await Filesystem.writeFile({ path, data: base64, directory: Directory.Documents, recursive: true })
+  const { uri } = await Filesystem.getUri({ path, directory: Directory.Documents })
+  try {
+    const { Share } = await import('@capacitor/share')
+    await Share.share({ title: media.title || fileName, url: uri, dialogTitle: 'Garder le fichier' })
+  } catch {
+    /* le partage est un bonus, jamais une condition de réussite */
+  }
+  return { mode: 'filesystem', fileName, path, bytes: blob.size, uri }
+}

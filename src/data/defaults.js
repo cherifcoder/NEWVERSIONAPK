@@ -48,6 +48,8 @@ export const defaultHypnosis = () => ({
     ambience: true,
     binaural: true,
     chime: true,
+    // Minuteur de sommeil : arrête la lecture tout seul après N minutes (0 = fin de séance).
+    sleepTimer: 0,
   },
   // { [sessionId]: { sessions, minutes, lastAt } }
   progress: {},

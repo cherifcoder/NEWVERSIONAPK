@@ -27,6 +27,7 @@
 
 import { SESSIONS } from './sessions.js'
 import { NEURAL_VOICES, VOICE_ENGINE, VOICE_GENERATED_AT, VOICE_SAMPLE, VOICE_TOTALS, VOICE_TRACKS } from './voiceTracks.js'
+import { HY_EXPORTS } from './exports.js'
 
 export { VOICE_ENGINE, VOICE_GENERATED_AT }
 
@@ -35,6 +36,7 @@ export const HY_KIND_META = {
   cue: { label: 'Repère sonore', icon: 'BellRing', tone: 'jade', color: '#2f9e78' },
   script: { label: 'Script', icon: 'FileText', tone: 'gold', color: '#cfa851' },
   voice: { label: 'Voix neuronale', icon: 'AudioLines', tone: 'gold', color: '#e0c07c' },
+  export: { label: 'Écoute nocturne', icon: 'Moon', tone: 'gold', color: '#cfa851' },
 }
 
 const ambience = (id, title, subtitle, src, bytes, description) => ({
@@ -244,9 +246,25 @@ export const voiceMediaList = (voiceId) => VOICE_MEDIA_LIST.filter((m) => m.voic
 
 export const VOICE_TOTAL_BYTES = VOICE_MEDIA_LIST.reduce((t, m) => t + (m.bytes || 0), 0)
 
+/* --------------------- Fichiers prêts à écouter --------------------- */
+
+/**
+ * Exports « prêts à écouter » (MP3 unique + MP4), générés par
+ * scripts/generate-hypnosis-export.mjs. Ce sont de vrais fichiers
+ * téléchargeables, à écouter en boucle la nuit dans n'importe quel lecteur.
+ */
+export const EXPORT_MEDIA = Object.fromEntries(HY_EXPORTS.map((e) => [e.id, e]))
+
+export const EXPORT_LIST = HY_EXPORTS
+
+/** Exports disponibles pour une séance (MP3 et/ou MP4). */
+export const exportMediaFor = (sessionId) => HY_EXPORTS.filter((e) => e.sessionId === sessionId)
+
+export const hasExports = (sessionId) => exportMediaFor(sessionId).length > 0
+
 /* ------------------------- Vue d'ensemble ------------------------- */
 
-export const HY_MEDIA = { ...AMBIENCES, ...CUES, ...SCRIPTS_MEDIA, ...VOICE_MEDIA }
+export const HY_MEDIA = { ...AMBIENCES, ...CUES, ...SCRIPTS_MEDIA, ...VOICE_MEDIA, ...EXPORT_MEDIA }
 
 export const HY_MEDIA_LIST = Object.values(HY_MEDIA)
 
@@ -260,7 +278,7 @@ export const SCRIPT_LIST = Object.values(SCRIPTS_MEDIA)
 
 export const TOTAL_HY_BYTES = HY_MEDIA_LIST.reduce((t, m) => t + (m.bytes || 0), 0)
 
-/** Tous les identifiants de médias utiles à une séance (ambiance + script + voix). */
+/** Tous les identifiants de médias utiles à une séance (ambiance + script + voix + exports). */
 export const sessionMediaIds = (session) => {
   if (!session) return []
   const ids = []
@@ -268,5 +286,6 @@ export const sessionMediaIds = (session) => {
   const scriptId = `hy-txt-${session.id}`
   if (HY_MEDIA[scriptId]) ids.push(scriptId)
   for (const m of VOICE_MEDIA_LIST) if (m.sessionId === session.id) ids.push(m.id)
+  for (const e of HY_EXPORTS) if (e.sessionId === session.id) ids.push(e.id)
   return ids
 }

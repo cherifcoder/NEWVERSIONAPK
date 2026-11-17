@@ -36,7 +36,7 @@ bilan permet de noter son ressenti (enregistré dans le journal du module).
 
 ---
 
-## 2. Les 6 séances
+## 2. Les 7 séances
 
 | # | Id | Titre | Niveau | Durée | Binaural |
 | --- | --- | --- | --- | --- | --- |
@@ -46,6 +46,13 @@ bilan permet de noter son ressenti (enregistré dans le journal du module).
 | 4 | `hy-scene` | La salle te respecte | Intermédiaire | 10 min | 220 + 10 Hz |
 | 5 | `hy-futur` | Le Futur Toi | Avancé | 12 min | 140 + 5,5 Hz |
 | 6 | `hy-sommeil` | La nuit qui répare | Découverte | 12 min | 110 + 2,5 Hz |
+| 7 | `hy-travail` | L'atelier du Futur Toi | Avancé | 15 min | 130 + 4,5 Hz |
+
+`hy-travail` est la séance **PNL d'endormissement** : reprogrammation de
+l'inconscient pendant le sommeil (amour du travail et du code, constance,
+confiance en soi, sens des affaires, négociation, goût de la lecture et de la
+récitation). Elle est marquée `sleep: true`, se termine **sans émergence** et
+utilise une voix **« berceuse »** (voir § 6).
 
 Chaque séance est une suite de **phases typées** :
 
@@ -82,6 +89,7 @@ Tout l'état vit dans `state.hypnosis` (voir `src/data/defaults.js → defaultHy
     ambience: true,     // fond sonore
     binaural: true,     // battement binaural
     chime: true,        // repères de transition
+    sleepTimer: 0,      // minuteur de sommeil en minutes (0 = fin de séance)
   },
   progress: {           // { [sessionId]: { sessions, minutes, lastAt } }
     'hy-induction': { sessions: 3, minutes: 24, lastAt: '…' },
@@ -189,6 +197,12 @@ téléphone et reste **identique partout**.
   | `denise` (défaut) | `fr-FR-DeniseNeural` | Femme | débit −10 %, ton −2 Hz |
   | `henri` | `fr-FR-HenriNeural` | Homme | débit −12 %, ton −4 Hz |
 
+- **Prosodie « berceuse » par séance** (`SLEEP_PROSODY` dans le générateur) : les
+  séances d'endormissement sont enregistrées **exprès** plus lentes et plus
+  graves. `hy-travail` est ainsi générée à **débit −22 %, ton −8 Hz** : une voix
+  très douce, au bord du sommeil. Les autres séances gardent la prosodie de base,
+  et leurs MP3 ne sont donc pas régénérés.
+
 - **Granularité : une phrase = un MP3.** Le lecteur met les phrases bout à bout
   et insère lui-même les silences : le tempo est **maîtrisé par l'application**
   (pas par la synthèse) et la phrase en cours se surligne **exactement**.
@@ -238,7 +252,44 @@ centaines de lignes. **Jamais de silence** : chaque action donne un retour visib
 
 ---
 
-## 8. Intégration IA (analyse locale + Studio IA)
+## 8. Minuteur de sommeil & fichiers prêts à écouter
+
+Deux outils pensés pour l'**écoute au lit**, disponibles pour toutes les séances.
+
+**Minuteur de sommeil** (`prefs.sleepTimer`, réglé dans le lecteur) : `Fin de
+séance` (défaut), 15, 30, 45, 60 ou 90 minutes. Pendant la lecture, un décompte
+est affiché ; quand le temps choisi est écoulé, la séance **s'arrête toute seule**,
+en douceur (`stopAll` avec fondu de 5 s), et un message le confirme. On peut ainsi
+s'endormir sans avoir à toucher au téléphone. Le décompte suit la lecture : il se
+met en pause avec elle et reprend avec elle.
+
+**Fichiers prêts à écouter** (`scripts/generate-hypnosis-export.mjs`) : chaque
+séance d'endormissement existe aussi en **un seul fichier**, pour l'écouter en
+boucle dans n'importe quel lecteur du téléphone :
+
+| Format | Contenu | Chemin |
+| --- | --- | --- |
+| MP3 | la séance entière (voix + silences) | `public/media/hypnosis/export/<séance>-<voix>.mp3` |
+| MP4 | la même piste + une image calme et fixe | `public/media/hypnosis/export/<séance>-<voix>.mp4` |
+
+Les silences insérés reproduisent **exactement** ceux du lecteur (`PAUSE_BASE` ×
+`PAUSE_BY_KIND`), puis tout est mis bout à bout avec **ffmpeg** — outil nécessaire
+**uniquement au moment de la génération** (l'app, elle, reste 100 % hors-ligne).
+Le manifeste `src/data/hypnosis/exports.js` est régénéré à chaque exécution.
+
+Dans l'app, ces fichiers apparaissent dans l'onglet **Hors-ligne** (« Écoute
+nocturne ») et directement dans le lecteur de séance, avec un bouton
+**Télécharger** :
+
+- **Web** : téléchargement classique du navigateur (`<a download>`).
+- **APK** : les octets sont lus par `fetch` (le WebView répond sur
+  `https://localhost`), écrits dans `Documents/METHOD/` via `@capacitor/filesystem`,
+  puis proposés au partage (`@capacitor/share`). On peut donc les sortir de l'app
+  (musique, cloud, ordinateur…). Voir `saveMediaToDevice` dans `offlineMedia.js`.
+
+---
+
+## 9. Intégration IA (analyse locale + Studio IA)
 
 Le module s'appuie sur deux briques transversales, **100 % locales** :
 
@@ -258,7 +309,7 @@ le relais** automatiquement.
 
 ---
 
-## 9. Sécurité & usage responsable
+## 10. Sécurité & usage responsable
 
 > Séance à faire **assis ou allongé, jamais en conduisant**. Les battements
 > binauraux nécessitent un **casque** et ne remplacent aucun soin médical.
@@ -271,30 +322,33 @@ le relais** automatiquement.
 
 ---
 
-## 10. Fichiers du module
+## 11. Fichiers du module
 
 ```
 src/data/hypnosis/
-  sessions.js    6 séances complètes (phases, textes, ambiances, binaural)
-  media.js       manifeste des médias (ambiances, repères, scripts, voix)
+  sessions.js    7 séances complètes (phases, textes, ambiances, binaural)
+  media.js       manifeste des médias (ambiances, repères, scripts, voix, exports)
   voiceTracks.js manifeste GÉNÉRÉ des voix (phrases, durées, octets)
+  exports.js     manifeste GÉNÉRÉ des fichiers prêts à écouter (MP3 / MP4)
   presets.js     6 presets binauraux + consigne de sécurité
   index.js       point d'entrée
 
 src/lib/
   hypnosisAudio.js   moteur Web Audio + voix embarquée + synthèse de repli
+  offlineMedia.js    gestionnaire hors-ligne (partagé) + export vers l'appareil
   aiAnalysis.js      analyse transversale locale (partagée)
   aiTasks.js         registre des tâches du Studio IA (partagée)
 
 src/modules/hypnosis/
   HypnosisStudio.jsx     racine + onglets + catalogue + modal script
-  SessionPlayer.jsx      lecteur de séance (voix embarquée, chronologie, orbe, bilan)
+  SessionPlayer.jsx      lecteur de séance (voix embarquée, minuteur, exports, bilan)
   VoiceLab.jsx           onglet Voix (voix embarquées, moteur, rythme)
   AmbienceLab.jsx        laboratoire binaural / ambiances / repères
-  HypnosisOffline.jsx    gestionnaire hors-ligne du module
+  HypnosisOffline.jsx    gestionnaire hors-ligne du module + écoute nocturne
   HypnosisProgress.jsx   statistiques, journal, lecture de la pratique
 
 scripts/generate-hypnosis.mjs        générateur local (WAV + textes + manifeste)
 scripts/generate-hypnosis-voice.mjs  générateur local des voix (MP3, msedge-tts)
-public/media/hypnosis/               ressources générées (dont voix/)
+scripts/generate-hypnosis-export.mjs générateur local MP3/MP4 (ffmpeg, au build)
+public/media/hypnosis/               ressources générées (dont voix/ et export/)
 ```
