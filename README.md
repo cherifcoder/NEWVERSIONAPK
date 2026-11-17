@@ -13,13 +13,13 @@ Aucune donnée ne quitte ton téléphone.
 | Source | Lien |
 | --- | --- |
 | **Dernière version (GitHub Releases)** | https://github.com/cherifcoder/NEWVERSIONAPK/releases/latest |
-| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.1.1-apk* |
+| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.2.0-apk* |
 
-**Fichier :** `METHOD-1.1.1.apk` — min. Android 7.0 (API 24).
+**Fichier :** `METHOD-1.2.0.apk` — min. Android 7.0 (API 24).
 
 ### Installation sur le téléphone
 
-1. Télécharge `METHOD-1.1.1.apk` sur ton téléphone.
+1. Télécharge `METHOD-1.2.0.apk` sur ton téléphone.
 2. Ouvre le fichier (Gestionnaire de fichiers → *Téléchargements*).
 3. Android affiche un avertissement : autorise **« Installer des applications inconnues »**
    pour ton navigateur / gestionnaire de fichiers.
@@ -40,12 +40,13 @@ Aucune donnée ne quitte ton téléphone.
 | 3 | **Éloquence · Négociation · Anglais** | Drills de prise de parole, répliques, vocabulaire |
 | 4 | **Dispatcher « Zéro Abandon »** | Décompose une ambition en actions immédiates |
 | 5 | **Académie du non-verbal** | Entrer, s'asseoir, saluer, se présenter, parler, sortir — micro-leçons, postures vectorielles, audio hors-ligne |
-| 6 | **Gym Quotidien des Mentors** | Exercices mentaux et physiques quotidiens |
-| 7 | **Tracker des Piliers** | Deep Work chronométré, régularité, séries |
-| 8 | **Journal de l'Acteur** | Journal de bord, humeur, insights, prompts |
-| 9 | **Le Metteur en Scène** (Agent IA) | Rapport d'analyse personnalisé, moteur local **ou** API LLM |
-| 10 | **Médiathèque** | Ressources audio / vidéo / texte téléchargeables **hors-ligne** |
-| 11 | **Réglages** | Profil, sécurité (PIN), IA, export / import, réinitialisation |
+| 6 | **Hypnose éricksonienne** | 6 séances guidées, voix et ambiances embarquées, laboratoire binaural, progression |
+| 7 | **Gym Quotidien des Mentors** | Exercices mentaux et physiques quotidiens |
+| 8 | **Tracker des Piliers** | Deep Work chronométré, régularité, séries |
+| 9 | **Journal de l'Acteur** | Journal de bord, humeur, insights, prompts |
+| 10 | **Studio IA** (Agent IA) | Débrief chirurgical + 8 tâches (situation, projets, piliers, tendance, éloquence, hypnose, coach) + analyse |
+| 11 | **Médiathèque** | Ressources audio / vidéo / texte téléchargeables **hors-ligne** |
+| 12 | **Réglages** | Profil, sécurité (PIN), IA, export / import, réinitialisation |
 
 ### Académie du non-verbal (module 11)
 
@@ -71,13 +72,45 @@ la fois, sans mécanique de « vies ».
 génération 100 % locale) : **[docs/MODULE_NON_VERBAL.md](docs/MODULE_NON_VERBAL.md)**.
 
 
-### Agent IA « Le Metteur en Scène »
+### Hypnose éricksonienne (module 12)
 
-- **Moteur local (par défaut)** : fonctionne **sans réseau**, analyse tes données
-  (piliers, journal, régularité) et rédige un rapport.
+Séances guidées d'hypnose éricksonienne, **écrites et sonorisées sur l'appareil** :
+
+- **6 séances** (détente, focus, prise de parole, sommeil, estime, projection),
+  déroulées en phases typées — accueil → induction → approfondissement →
+  suggestion → visualisation → ancrage → émergence.
+- **Voix** : synthèse vocale du téléphone (fr-FR), qui pilote le rythme des
+  phases ; repli sur la **lecture silencieuse** à l'écran si la voix est absente.
+- **Bande-son embarquée** : 5 boucles d'ambiance (nappe, pluie, vagues, forêt,
+  feu) + 5 repères sonores (cloche, gong, bol, souffles), plus un **battement
+  binaural** généré en direct (6 presets : delta → gamma).
+- **Laboratoire « Ambiances »** : écoute libre des presets binauraux, des boucles
+  et des repères, avec réglage du volume.
+- **Progression** : séances, minutes, série de jours, **séance conseillée** par
+  l'analyse locale, journal des ressentis, lecture de la pratique.
+- **Hors-ligne** : les sons et les scripts sont **embarqués dans l'APK** (et mis
+  en cache sur le web) — lisibles sans réseau, à vie.
+
+> Séance à faire assis ou allongé, **jamais en conduisant** ; le battement
+> binaural nécessite un casque et ne remplace aucun soin médical.
+
+📄 Détails techniques (modèle de données, moteur Web Audio, génération 100 %
+locale, intégration IA) : **[docs/MODULE_HYPNOSE.md](docs/MODULE_HYPNOSE.md)**.
+
+
+### Studio IA (Agent IA)
+
+- **Onglet Débrief** : le « Metteur en Scène » analyse ton rapport du jour et
+  rédige un verdict chirurgical.
+- **8 tâches** : Situation, Projets, Piliers, Tendance, Éloquence, Hypnose, Coach
+  libre — chacune avec un **moteur local** (fonctionne **sans réseau**, à partir de
+  tes données réelles) et, si une clé est configurée, un affinage par LLM.
+- **Onglet Analyse** : métriques, état des piliers, tendances (7 jours vs 7 jours
+  précédents), constats + action, et revue de semaine copiable.
 - **Moteur API (optionnel)** : renseigne une clé dans *Réglages → IA* pour utiliser
   un fournisseur compatible **OpenAI** ou **Gemini** (Groq, OpenRouter, OpenAI, Gemini, custom).
-  En cas d'échec réseau, l'app **retombe automatiquement** sur le moteur local.
+  En cas d'échec réseau, l'app **retombe automatiquement** sur le moteur local :
+  jamais d'écran vide.
 
 ---
 
@@ -90,7 +123,7 @@ génération 100 % locale) : **[docs/MODULE_NON_VERBAL.md](docs/MODULE_NON_VERBA
   `@capacitor/filesystem`).
 - Aucun compte, aucun tracking, aucun serveur propriétaire.
 - **Export / Import** JSON dans *Réglages* pour sauvegarder ou transférer
-  (inclut la progression du module non-verbal).
+  (inclut la progression des modules non-verbal **et** hypnose).
 
 ---
 
@@ -119,6 +152,7 @@ npm run lint      # oxlint
 ```bash
 node scripts/generate-media.mjs        # posters SVG, audio WAV, textes
 node scripts/generate-nonverbal.mjs    # module 11 : audio, textes, postures et clips SVG
+node scripts/generate-hypnosis.mjs     # module 12 : ambiances WAV, repères sonores, scripts
 node scripts/generate-icons.mjs        # icônes + splash (PNG depuis public/logo.svg)
 npx capacitor-assets generate --android   # distribue icônes/splash dans android/
 ```
@@ -156,11 +190,11 @@ Le workflow `.github/workflows/android.yml` construit l'APK signé à chaque
 lors d'un tag `v*` :
 
 ```bash
-git tag v1.1.1
-git push origin v1.1.1
+git tag v1.2.0
+git push origin v1.2.0
 ```
 
-L'APK est nommé d'après la version : `METHOD-1.1.1.apk`.
+L'APK est nommé d'après la version : `METHOD-1.2.0.apk`.
 
 ### Signature
 
@@ -179,16 +213,17 @@ src/
   context/        AppContext (état global, persistance, PIN, rollover de jour)
   data/           tracks, archetypes, wisdom, exercises, eloquence, english, resources…
                   + nonverbal/ (curriculum, media, scripts)
+                  + hypnosis/  (sessions, media, presets)
   hooks/          useDeepWorkTimer
-  lib/            aiAgent, crypto (PIN), storage, utils
-                  + figure (moteur SVG), curriculum, offlineMedia
-  modules/        les 11 modules + registry.js (+ nonverbal/)
+  lib/            aiAgent, aiAnalysis, aiTasks, crypto (PIN), storage, utils
+                  + figure (moteur SVG), curriculum, offlineMedia, hypnosisAudio
+  modules/        les 12 modules + registry.js (+ nonverbal/, hypnosis/)
 public/
   sw.js           service worker (shell hors-ligne + cache médias)
-  media/          ressources générées (posters, audio, textes, nonverbal/)
+  media/          ressources générées (posters, audio, textes, nonverbal/, hypnosis/)
   logo.svg
-docs/             MODULE_NON_VERBAL.md (architecture du module 11)
-scripts/          generate-media.mjs, generate-nonverbal.mjs, generate-icons.mjs
+docs/             MODULE_NON_VERBAL.md, MODULE_HYPNOSE.md
+scripts/          generate-media.mjs, generate-nonverbal.mjs, generate-hypnosis.mjs, generate-icons.mjs
 android/          projet Capacitor natif
 .github/          workflow de build APK
 ```

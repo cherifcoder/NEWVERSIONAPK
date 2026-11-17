@@ -119,6 +119,15 @@ export const mergeImported = (imported, defaults) => {
       downloads: { ...(defaults.nonverbal?.downloads || {}), ...(incoming.nonverbal?.downloads || {}) },
       log: { ...(defaults.nonverbal?.log || {}), ...(incoming.nonverbal?.log || {}) },
     },
+    hypnosis: {
+      ...(defaults.hypnosis || {}),
+      ...(incoming.hypnosis || {}),
+      prefs: { ...(defaults.hypnosis?.prefs || {}), ...(incoming.hypnosis?.prefs || {}) },
+      progress: { ...(defaults.hypnosis?.progress || {}), ...(incoming.hypnosis?.progress || {}) },
+      downloads: { ...(defaults.hypnosis?.downloads || {}), ...(incoming.hypnosis?.downloads || {}) },
+      log: { ...(defaults.hypnosis?.log || {}), ...(incoming.hypnosis?.log || {}) },
+      journal: incoming.hypnosis?.journal || defaults.hypnosis?.journal || [],
+    },
   }
 }
 

@@ -26,6 +26,33 @@ export const defaultNonverbal = () => ({
   log: {},
 })
 
+/* ------------------------------------------------------------------
+   Module 12 — Hypnose éricksonienne
+   Même principe : un seul objet `hypnosis`, donc l'export / import de
+   sauvegarde le couvre sans code dédié.
+------------------------------------------------------------------- */
+export const defaultHypnosis = () => ({
+  version: 1,
+  // Préférences de lecture des séances
+  prefs: {
+    voice: true,
+    voiceRate: 0.9,
+    voicePitch: 0.95,
+    volume: 0.7,
+    ambience: true,
+    binaural: true,
+    chime: true,
+  },
+  // { [sessionId]: { sessions, minutes, lastAt } }
+  progress: {},
+  // { 'YYYY-MM-DD': { sessions, minutes } }
+  log: {},
+  // { [mediaId]: { bytes, mode, downloadedAt, version } }
+  downloads: {},
+  // [{ id, sessionId, mood, note, createdAt }]
+  journal: [],
+})
+
 export const defaultState = () => ({
   schema: APP_VERSION,
   createdAt: new Date().toISOString(),
@@ -113,6 +140,9 @@ export const defaultState = () => ({
 
   // Communication non verbale (module 11)
   nonverbal: defaultNonverbal(),
+
+  // Hypnose éricksonienne (module 12)
+  hypnosis: defaultHypnosis(),
 
   streak: { current: 0, best: 0, lastDay: null, freezes: 0 },
 

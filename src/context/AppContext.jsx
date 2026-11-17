@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { defaultState, defaultNonverbal, DEMO_TASKS } from '../data/defaults'
+import { defaultState, defaultNonverbal, defaultHypnosis, DEMO_TASKS } from '../data/defaults'
 import { PILLARS, emptyPillars } from '../data/tracks'
 import { hashPin, verifyPin as verifyPinHash } from '../lib/crypto'
 import {
@@ -428,6 +428,71 @@ export function AppProvider({ children }) {
     setState((s) => nvPatch(s, (nv) => ({ ...nv, xp: 0, progress: {}, reviews: {}, log: {} })))
   }, [])
 
+  /* --- Hypnose éricksonienne (module 12) ---
+     Même contrat que le non-verbal : chaque action garantit l'existence
+     de `hypnosis` (sauvegardes anciennes ou antérieures au module). */
+  const hyPatch = (s, fn) => ({ ...s, hypnosis: fn(s.hypnosis || defaultHypnosis()) })
+
+  const hySetPrefs = useCallback((patch) => {
+    setState((s) => hyPatch(s, (hy) => ({ ...hy, prefs: { ...hy.prefs, ...patch } })))
+  }, [])
+
+  const hyCompleteSession = useCallback((sessionId, { minutes = 0 } = {}) => {
+    const day = dayKey()
+    const m = Math.max(0, Math.round(minutes))
+    setState((s) =>
+      hyPatch(s, (hy) => {
+        const entry = hy.progress[sessionId] || { sessions: 0, minutes: 0 }
+        const dayLog = hy.log[day] || { sessions: 0, minutes: 0 }
+        return {
+          ...hy,
+          progress: {
+            ...hy.progress,
+            [sessionId]: {
+              sessions: (entry.sessions || 0) + 1,
+              minutes: (entry.minutes || 0) + m,
+              lastAt: new Date().toISOString(),
+            },
+          },
+          log: {
+            ...hy.log,
+            [day]: { sessions: (dayLog.sessions || 0) + 1, minutes: (dayLog.minutes || 0) + m },
+          },
+        }
+      }),
+    )
+  }, [])
+
+  const hyAddJournalEntry = useCallback((entry) => {
+    setState((s) =>
+      hyPatch(s, (hy) => ({
+        ...hy,
+        journal: [
+          { id: uid('hyj'), createdAt: new Date().toISOString(), ...entry },
+          ...(hy.journal || []),
+        ].slice(0, 200),
+      })),
+    )
+  }, [])
+
+  const hyMarkDownload = useCallback((mediaId, info) => {
+    setState((s) => hyPatch(s, (hy) => ({ ...hy, downloads: { ...hy.downloads, [mediaId]: info } })))
+  }, [])
+
+  const hyUnmarkDownload = useCallback((mediaId) => {
+    setState((s) =>
+      hyPatch(s, (hy) => {
+        const next = { ...hy.downloads }
+        delete next[mediaId]
+        return { ...hy, downloads: next }
+      }),
+    )
+  }, [])
+
+  const hyResetProgress = useCallback(() => {
+    setState((s) => hyPatch(s, (hy) => ({ ...hy, progress: {}, log: {}, journal: [] })))
+  }, [])
+
   /* --- Réglages / Profil / Sécurité --- */
   const updateSettings = useCallback((patch) => {
     setState((s) => ({ ...s, settings: { ...s.settings, ...patch } }))
@@ -584,6 +649,12 @@ export function AppProvider({ children }) {
       nvUnmarkDownload,
       nvSetDailyGoal,
       nvResetProgress,
+      hySetPrefs,
+      hyCompleteSession,
+      hyAddJournalEntry,
+      hyMarkDownload,
+      hyUnmarkDownload,
+      hyResetProgress,
       updateSettings,
       updateProfile,
       updateSecurity,
@@ -632,6 +703,12 @@ export function AppProvider({ children }) {
       nvUnmarkDownload,
       nvSetDailyGoal,
       nvResetProgress,
+      hySetPrefs,
+      hyCompleteSession,
+      hyAddJournalEntry,
+      hyMarkDownload,
+      hyUnmarkDownload,
+      hyResetProgress,
       updateSettings,
       updateProfile,
       updateSecurity,

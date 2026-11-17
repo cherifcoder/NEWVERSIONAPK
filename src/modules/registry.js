@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   registry.js — Cartographie des 11 modules de l'application
+   registry.js — Cartographie des 12 modules de l'application
 ------------------------------------------------------------------- */
 import Dashboard from './Dashboard'
 import CharacterBible from './CharacterBible'
@@ -11,6 +11,7 @@ import ActorJournal from './ActorJournal'
 import AiDirector from './AiDirector'
 import MediaLibrary from './MediaLibrary'
 import NonverbalAcademy from './nonverbal/NonverbalAcademy'
+import HypnosisStudio from './hypnosis/HypnosisStudio'
 import SettingsPanel from './SettingsPanel'
 
 export const MODULES = [
@@ -107,6 +108,16 @@ export const MODULES = [
     subtitle: 'Entrer, s\'asseoir, saluer, se présenter, prendre la parole — micro-leçons et postures vectorielles',
     icon: 'PersonStanding',
     Component: NonverbalAcademy,
+    group: 'incarnation',
+  },
+  {
+    id: 'hypnosis',
+    label: 'Hypnose éricksonienne',
+    short: 'Hypnose',
+    title: 'Hypnose éricksonienne',
+    subtitle: 'Séances guidées, voix et ambiances embarquées — écrites et sonorisées sur l\'appareil',
+    icon: 'Waves',
+    Component: HypnosisStudio,
     group: 'incarnation',
   },
   {
