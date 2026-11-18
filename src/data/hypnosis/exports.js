@@ -10,7 +10,7 @@
    Régénérer :  node scripts/generate-hypnosis-export.mjs
 ------------------------------------------------------------------- */
 
-export const HY_EXPORT_GENERATED_AT = "2026-11-17T23:54:37.664Z"
+export const HY_EXPORT_GENERATED_AT = "2026-11-18T00:08:11.026Z"
 
 export const HY_EXPORTS = [
   {

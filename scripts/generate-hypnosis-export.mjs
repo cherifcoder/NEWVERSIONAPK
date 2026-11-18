@@ -60,14 +60,19 @@ const pauseMs = (kind) => Math.max(150, Math.round(PAUSE_BASE * (PAUSE_BY_KIND[k
 
 /* ---------------------------- ffmpeg ---------------------------- */
 
+/**
+ * Localise ffmpeg, dans l'ordre :
+ *   1. --ffmpeg=<chemin>
+ *   2. variable d'environnement FFMPEG_PATH
+ *   3. « ffmpeg » dans le PATH
+ * Sur Windows : `winget install Gyan.FFmpeg`, ou bien indique le chemin
+ * complet du binaire.
+ */
 const ffmpegCandidates = () => {
   const list = []
   const explicit = arg('ffmpeg') || process.env.FFMPEG_PATH
   if (explicit) list.push(explicit)
   list.push('ffmpeg')
-  const temp = process.env.LOCALAPPDATA
-  if (temp) list.push(join(temp, 'Temp', 'opencode', 'ffmpeg', 'bin', 'ffmpeg.exe'))
-  if (temp) list.push(join(temp, 'opencode', 'ffmpeg', 'bin', 'ffmpeg.exe'))
   return list
 }
 
