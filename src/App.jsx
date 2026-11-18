@@ -4,6 +4,7 @@ import Onboarding from './components/Onboarding'
 import Shell from './components/layout/Shell'
 import { AppProvider, useApp } from './context/AppContext'
 import { MODULES, MODULE_MAP } from './modules/registry'
+import StrictSession from './modules/deepwork/StrictSession'
 
 const Root = () => {
   const { state, locked, setLastModule } = useApp()
@@ -23,6 +24,8 @@ const Root = () => {
 
   if (!state.ui?.seenOnboarding) return <Onboarding />
   if (locked) return <LockScreen />
+  // Un bloc verrouillé prend tout l'écran de l'application.
+  if (state.deepWork?.activeSession?.guard) return <StrictSession />
 
   const mod = MODULE_MAP[active] || MODULES[0]
   const Component = mod.Component

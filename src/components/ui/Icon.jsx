@@ -134,6 +134,15 @@ import {
   Waypoints,
   Wind,
   Workflow,
+  /* --- Module 13 · Deep Work verrouillé --- */
+  BatteryCharging,
+  BellOff,
+  Hand,
+  LockKeyhole,
+  PhoneCall,
+  PhoneOff,
+  ShieldAlert,
+  ShieldOff,
 } from 'lucide-react'
 
 const REGISTRY = {
@@ -153,6 +162,8 @@ const REGISTRY = {
   LoaderCircle, MoonStar, Mountain, Music, Orbit, PenLine, Power, Radio, Repeat2, Send,
   SlidersHorizontal, Sunrise, Trees, Volume1, VolumeX, WandSparkles, Waves, Waypoints,
   Wind, Workflow,
+  /* --- Module 13 · Deep Work verrouillé --- */
+  BatteryCharging, BellOff, Hand, LockKeyhole, PhoneCall, PhoneOff, ShieldAlert, ShieldOff,
 }
 
 export const Icon = ({ name, size = 18, className = '', strokeWidth = 1.7, ...rest }) => {

@@ -13,13 +13,13 @@ Aucune donnée ne quitte ton téléphone.
 | Source | Lien |
 | --- | --- |
 | **Dernière version (GitHub Releases)** | https://github.com/cherifcoder/NEWVERSIONAPK/releases/latest |
-| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.4.0-apk* |
+| Artefact de build (Actions) | onglet **Actions** → dernier build réussi → *METHOD-1.5.0-apk* |
 
-**Fichier :** `METHOD-1.4.0.apk` — min. Android 7.0 (API 24).
+**Fichier :** `METHOD-1.5.0.apk` — min. Android 7.0 (API 24).
 
 ### Installation sur le téléphone
 
-1. Télécharge `METHOD-1.4.0.apk` sur ton téléphone.
+1. Télécharge `METHOD-1.5.0.apk` sur ton téléphone.
 2. Ouvre le fichier (Gestionnaire de fichiers → *Téléchargements*).
 3. Android affiche un avertissement : autorise **« Installer des applications inconnues »**
    pour ton navigateur / gestionnaire de fichiers.
@@ -47,6 +47,7 @@ Aucune donnée ne quitte ton téléphone.
 | 10 | **Studio IA** (Agent IA) | Débrief chirurgical + 8 tâches (situation, projets, piliers, tendance, éloquence, hypnose, coach) + analyse |
 | 11 | **Médiathèque** | Ressources audio / vidéo / texte téléchargeables **hors-ligne** |
 | 12 | **Réglages** | Profil, sécurité (PIN), IA, export / import, réinitialisation |
+| 13 | **Deep Work verrouillé** | Bloc de 90 min, **téléphone bloqué**, appels autorisés, anti-désinstallation |
 
 ### Académie du non-verbal (module 11)
 
@@ -131,6 +132,40 @@ locale, intégration IA) : **[docs/MODULE_HYPNOSE.md](docs/MODULE_HYPNOSE.md)**.
 
 ---
 
+### Deep Work verrouillé (module 13)
+
+Un bloc de travail profond pendant lequel **le téléphone est bloqué** : réseaux
+sociaux, navigateurs, Paramètres, Play Store et la page « infos de l'application »
+sont interceptés et renvoyés vers METHOD. **Une seule exception : les appels**,
+entrants comme sortants, restent 100 % fonctionnels.
+
+- **Blocage strict** : un **service d'accessibilité** observe les changements de
+  fenêtre et affiche une **surimpression opaque** par-dessus toute application
+  interdite (type `TYPE_ACCESSIBILITY_OVERLAY`, qui ne consomme aucune permission
+  et passe au-dessus de tout sauf la barre d'état). L'app fautive ne reçoit plus
+  aucune touche.
+- **Exception appels** : la détection d'appel lit `AudioManager.getMode()`
+  (aucune permission `READ_PHONE_STATE`) ; pendant un appel, la surimpression
+  s'efface et l'interface d'appel native n'est jamais recouverte.
+- **Anti-désinstallation** : l'**administrateur d'appareil** dissuade fortement la
+  désinstallation (Android refuse tant qu'il est actif, et les Paramètres sont
+  bloqués). Si METHOD est **Device Owner**, la désinstallation devient
+  **réellement impossible** et le mode kiosque s'active automatiquement.
+- **Liste blanche totale** : tout est bloqué sauf METHOD, la chaîne d'appel, l'UI
+  système et le clavier — plus les paquets que tu ajoutes toi-même.
+- **Sortie de secours** : appui continu de **5 secondes** + recopie exacte de
+  `JE CHOISIS D'ABANDONNER`. Chaque abandon est consigné (motif, temps, blocages).
+- **Auto-détection** : aucune configuration manuelle — l'app détecte l'état réel
+  des autorisations et affiche toujours un retour visible (vert = prêt).
+- **Hors-ligne, 100 % local** : l'état vit dans `state.deepWork`, comme le reste.
+
+> Le blocage d'autres applications via un service d'accessibilité est contraire
+> aux règles du Google Play Store : réservé à cet **APK personnel**. En Device
+> Owner, l'anti-désinstallation est totale ; sinon elle reste fortement
+> dissuasive. Voir **[docs/MODULE_DEEPWORK.md](docs/MODULE_DEEPWORK.md)**.
+
+---
+
 ## 🔐 Vie privée
 
 - Toutes les données restent **sur l'appareil** (`localStorage`, clé `method.state.v1`).
@@ -140,7 +175,7 @@ locale, intégration IA) : **[docs/MODULE_HYPNOSE.md](docs/MODULE_HYPNOSE.md)**.
   `@capacitor/filesystem`).
 - Aucun compte, aucun tracking, aucun serveur propriétaire.
 - **Export / Import** JSON dans *Réglages* pour sauvegarder ou transférer
-  (inclut la progression des modules non-verbal **et** hypnose).
+  (inclut la progression des modules non-verbal, hypnose **et deep work**).
 
 ---
 
@@ -208,11 +243,11 @@ Le workflow `.github/workflows/android.yml` construit l'APK signé à chaque
 lors d'un tag `v*` :
 
 ```bash
-git tag v1.4.0
-git push origin v1.4.0
+git tag v1.5.0
+git push origin v1.5.0
 ```
 
-L'APK est nommé d'après la version : `METHOD-1.4.0.apk`.
+L'APK est nommé d'après la version : `METHOD-1.5.0.apk`.
 
 ### Signature
 
@@ -233,14 +268,14 @@ src/
                   + nonverbal/ (curriculum, media, scripts)
                   + hypnosis/  (sessions, media, presets, voiceTracks)
   hooks/          useDeepWorkTimer
-  lib/            aiAgent, aiAnalysis, aiTasks, crypto (PIN), storage, utils
+  lib/            aiAgent, aiAnalysis, aiTasks, crypto (PIN), storage, utils, focusGuard
                   + figure (moteur SVG), curriculum, offlineMedia, hypnosisAudio
-  modules/        les 12 modules + registry.js (+ nonverbal/, hypnosis/)
+  modules/        les 13 modules + registry.js (+ nonverbal/, hypnosis/, deepwork/)
 public/
   sw.js           service worker (shell hors-ligne + cache médias)
   media/          ressources générées (posters, audio, textes, nonverbal/, hypnosis/)
   logo.svg
-docs/             MODULE_NON_VERBAL.md, MODULE_HYPNOSE.md
+docs/             MODULE_NON_VERBAL.md, MODULE_HYPNOSE.md, MODULE_DEEPWORK.md
 scripts/          generate-media.mjs, generate-nonverbal.mjs, generate-hypnosis.mjs,
                   generate-hypnosis-voice.mjs, generate-icons.mjs
 android/          projet Capacitor natif

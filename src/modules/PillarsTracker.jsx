@@ -20,7 +20,7 @@ import { cx, dayKey, formatClock, formatMinutes, pct } from '../lib/utils'
 
 const UNITS = { minutes: 'min', pages: 'pages', parties: 'parties' }
 
-export const PillarsTracker = () => {
+export const PillarsTracker = ({ onNavigate }) => {
   const {
     state,
     derived,
@@ -36,6 +36,7 @@ export const PillarsTracker = () => {
   const [intent, setIntent] = useState('')
   const [showTargets, setShowTargets] = useState(false)
   const [toast, setToast] = useState('')
+  const [guardOn, setGuardOn] = useState(state.deepWork.guard?.enabled ?? true)
 
   const clock = useDeepWorkClock(state.deepWork.activeSession)
   const pillar = PILLAR_MAP[tab]
@@ -151,20 +152,50 @@ export const PillarsTracker = () => {
                 placeholder="Ex. Terminer l'API d'authentification et la déployer"
               />
             </Labeled>
+
+            <button
+              type="button"
+              onClick={() => setGuardOn((v) => !v)}
+              className={cx(
+                'flex w-full items-center gap-3 rounded-xl border p-3 text-left transition',
+                guardOn ? 'border-gold-500/35 bg-gold-500/10' : 'border-white/8 bg-white/3',
+              )}
+            >
+              <span
+                className={cx(
+                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border',
+                  guardOn ? 'border-gold-500/40 bg-gold-500/15 text-gold-200' : 'border-white/10 bg-white/5 text-ash',
+                )}
+              >
+                <Icon name={guardOn ? 'ShieldAlert' : 'ShieldOff'} size={15} />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[12.5px] font-semibold text-ivory">Verrouillage strict</span>
+                <span className="block text-[11px] leading-relaxed text-ash">
+                  {guardOn ? 'Téléphone bloqué pendant le bloc · appels autorisés' : 'Minuteur simple, sans blocage'}
+                </span>
+              </span>
+            </button>
+
             <div className="flex flex-wrap gap-2">
               <Button
                 variant="gold"
                 icon="Play"
                 onClick={() => {
-                  startDeepWork(intent)
+                  startDeepWork(intent, { guard: guardOn, duration: DEEP_WORK_BLOCK_MINUTES })
                   setIntent('')
                 }}
               >
-                Lancer le bloc de 90 min
+                Lancer le bloc de {DEEP_WORK_BLOCK_MINUTES} min
               </Button>
               <Button variant="ghost" icon="Plus" onClick={() => addPillarValue('code', 30)}>
                 Créditer 30 min manuellement
               </Button>
+              {onNavigate && (
+                <Button variant="ghost" icon="ShieldAlert" onClick={() => onNavigate('deepwork')}>
+                  Module Deep Work
+                </Button>
+              )}
             </div>
             <div className="flex flex-wrap gap-1.5 pt-1">
               {['Deep Work — Code', 'Deep Work — Lecture', 'Deep Work — Échecs', 'Deep Work — Anglais'].map((q) => (

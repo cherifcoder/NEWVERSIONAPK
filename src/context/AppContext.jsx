@@ -20,6 +20,7 @@ import {
   wipeAll,
 } from '../lib/storage'
 import { XP_PER_STEP, bumpDailyLog, scheduleReview } from '../lib/curriculum'
+import { guardListen, guardStart, guardStop, guardSupported } from '../lib/focusGuard'
 import { clamp, dayKey, daysBetween, sum, uid } from '../lib/utils'
 
 const AppContext = createContext(null)
@@ -33,8 +34,22 @@ export const useApp = () => {
 export function AppProvider({ children }) {
   const [state, setState] = useState(() => {
     const stored = loadState()
-    if (!stored) return { ...defaultState(), tasks: DEMO_TASKS }
-    return { ...defaultState(), ...stored, tasks: stored.tasks || DEMO_TASKS }
+    const base = defaultState()
+    if (!stored) return { ...base, tasks: DEMO_TASKS }
+    // Migration douce : un état enregistré par une version antérieure peut ne
+    // pas connaître `deepWork.guard`. On fusionne au lieu d'écraser.
+    return {
+      ...base,
+      ...stored,
+      tasks: stored.tasks || DEMO_TASKS,
+      deepWork: {
+        ...base.deepWork,
+        ...(stored.deepWork || {}),
+        guard: { ...base.deepWork.guard, ...(stored.deepWork?.guard || {}) },
+        sessions: stored.deepWork?.sessions || base.deepWork.sessions,
+        exits: stored.deepWork?.exits || base.deepWork.exits,
+      },
+    }
   })
 
   const [locked, setLocked] = useState(false)
@@ -162,25 +177,36 @@ export function AppProvider({ children }) {
   }, [])
 
   /* --- Deep Work --- */
-  const startDeepWork = useCallback((intent = '') => {
+  const startDeepWork = useCallback((intent = '', opts = {}) => {
+    const guard = opts.guard ?? true
+    const duration = Math.max(1, Math.round(Number(opts.duration) || 90))
     setState((s) => ({
       ...s,
       deepWork: {
         ...s.deepWork,
-        activeSession: { startedAt: Date.now(), intent, blockIndex: (s.deepWork.sessions || []).length + 1 },
+        activeSession: {
+          startedAt: Date.now(),
+          intent,
+          blockIndex: (s.deepWork.sessions || []).length + 1,
+          durationMinutes: duration,
+          guard,
+          blocked: 0,
+        },
       },
     }))
   }, [])
 
-  const cancelDeepWork = useCallback(() => {
-    setState((s) => ({ ...s, deepWork: { ...s.deepWork, activeSession: null } }))
-  }, [])
-
-  const stopDeepWork = useCallback(({ addToPillar = true } = {}) => {
+  /**
+   * Clôture une session : enregistre le bloc, crédite (ou non) le pilier
+   * « Code & Deep Work » et journalise éventuellement une sortie de secours.
+   */
+  const endDeepWork = useCallback(({ addToPillar = true, exitReason = null } = {}) => {
     setState((s) => {
       const active = s.deepWork.activeSession
       if (!active) return s
-      const minutes = Math.max(1, Math.round((Date.now() - active.startedAt) / 60000))
+      const elapsedMs = Math.max(0, Date.now() - active.startedAt)
+      const minutes = Math.max(1, Math.round(elapsedMs / 60000))
+      const elapsedSeconds = Math.round(elapsedMs / 1000)
       const session = {
         id: uid('dw'),
         date: dayKey(),
@@ -188,9 +214,23 @@ export function AppProvider({ children }) {
         intent: active.intent,
         startedAt: new Date(active.startedAt).toISOString(),
         endedAt: new Date().toISOString(),
+        blocked: active.blocked || 0,
+        guarded: Boolean(active.guard),
       }
       const pillars = { ...(s.today?.pillars || emptyPillars()) }
       if (addToPillar) pillars.code = (pillars.code || 0) + minutes
+      const exits = exitReason
+        ? [
+            {
+              id: uid('dwx'),
+              at: new Date().toISOString(),
+              reason: exitReason,
+              elapsedSeconds,
+              blocked: active.blocked || 0,
+            },
+            ...(s.deepWork.exits || []),
+          ].slice(0, 100)
+        : s.deepWork.exits || []
       return {
         ...s,
         today: { ...s.today, date: dayKey(), pillars },
@@ -199,10 +239,126 @@ export function AppProvider({ children }) {
           activeSession: null,
           sessions: [session, ...(s.deepWork.sessions || [])].slice(0, 300),
           totalMinutes: (s.deepWork.totalMinutes || 0) + minutes,
+          exits,
         },
       }
     })
   }, [])
+
+  const stopDeepWork = useCallback((opts = {}) => endDeepWork(opts), [endDeepWork])
+
+  /** Abandon volontaire : aucun crédit de pilier, mais une trace dans l'historique. */
+  const cancelDeepWork = useCallback(() => {
+    setState((s) => {
+      const active = s.deepWork.activeSession
+      if (!active) return s
+      const elapsedSeconds = Math.max(0, Math.round((Date.now() - active.startedAt) / 1000))
+      return {
+        ...s,
+        deepWork: {
+          ...s.deepWork,
+          activeSession: null,
+          exits: [
+            {
+              id: uid('dwx'),
+              at: new Date().toISOString(),
+              reason: 'cancelled',
+              elapsedSeconds,
+              blocked: active.blocked || 0,
+            },
+            ...(s.deepWork.exits || []),
+          ].slice(0, 100),
+        },
+      }
+    })
+  }, [])
+
+  /** Sortie de secours d'un bloc verrouillé (appui long + phrase). */
+  const abandonDeepWork = useCallback((reason = 'friction') => endDeepWork({ addToPillar: true, exitReason: reason }), [endDeepWork])
+
+  /** Tentative de contournement interceptée par le service d'accessibilité. */
+  const registerGuardBlock = useCallback((pkg = '') => {
+    setState((s) => ({
+      ...s,
+      deepWork: {
+        ...s.deepWork,
+        blockedCount: (s.deepWork.blockedCount || 0) + 1,
+        guard: {
+          ...s.deepWork.guard,
+          lastBlockedAt: new Date().toISOString(),
+          lastBlockedPackage: pkg || null,
+        },
+        activeSession: s.deepWork.activeSession
+          ? { ...s.deepWork.activeSession, blocked: (s.deepWork.activeSession.blocked || 0) + 1 }
+          : null,
+      },
+    }))
+  }, [])
+
+  /** Réconciliation du compteur de blocages avec l'état natif (reprise d'app). */
+  const syncGuardState = useCallback((info) => {
+    if (!info || typeof info.blocked !== 'number') return
+    setState((s) => {
+      const active = s.deepWork?.activeSession
+      if (!active || active.blocked === info.blocked) return s
+      return { ...s, deepWork: { ...s.deepWork, activeSession: { ...active, blocked: info.blocked } } }
+    })
+  }, [])
+
+  const updateGuardPrefs = useCallback((patch) => {
+    setState((s) => ({ ...s, deepWork: { ...s.deepWork, guard: { ...s.deepWork.guard, ...patch } } }))
+  }, [])
+
+  const setGuardWhitelist = useCallback((list) => {
+    setState((s) => ({
+      ...s,
+      deepWork: { ...s.deepWork, guard: { ...s.deepWork.guard, whitelist: Array.isArray(list) ? list : [] } },
+    }))
+  }, [])
+
+  /* --- Verrouillage strict : synchronisation avec la couche native Android --- */
+
+  // Écoute des événements poussés par le service natif.
+  useEffect(() => {
+    if (!guardSupported()) return undefined
+    const subs = [
+      guardListen('guardBlocked', (info) => registerGuardBlock(info?.package || '')),
+      guardListen('guardState', (info) => syncGuardState(info)),
+      guardListen('guardEnded', () => endDeepWork()),
+    ]
+    return () => subs.forEach((sub) => sub?.remove?.())
+  }, [registerGuardBlock, syncGuardState, endDeepWork])
+
+  // Démarre / relâche le verrouillage natif en suivant l'état de la session.
+  useEffect(() => {
+    if (!guardSupported()) return undefined
+    const active = state.deepWork?.activeSession
+    if (active?.guard) {
+      guardStart({
+        minutes: active.durationMinutes || 90,
+        intent: active.intent || '',
+        startedAt: active.startedAt,
+      })
+    } else {
+      guardStop('sync')
+    }
+    return undefined
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.deepWork?.activeSession?.startedAt, state.deepWork?.activeSession?.guard, state.deepWork?.activeSession?.durationMinutes])
+
+  // Fin automatique du bloc verrouillé (le natif fait de même de son côté).
+  useEffect(() => {
+    const active = state.deepWork?.activeSession
+    if (!active?.guard) return undefined
+    const endAt = active.startedAt + (active.durationMinutes || 90) * 60000
+    const left = endAt - Date.now()
+    if (left <= 0) {
+      endDeepWork()
+      return undefined
+    }
+    const timer = setTimeout(() => endDeepWork(), left + 800)
+    return () => clearTimeout(timer)
+  }, [state.deepWork?.activeSession?.startedAt, state.deepWork?.activeSession?.guard, state.deepWork?.activeSession?.durationMinutes, endDeepWork])
 
   /* --- Tâches --- */
   const addTask = useCallback((title, pillar = 'code', projectId = null) => {
@@ -626,6 +782,11 @@ export function AppProvider({ children }) {
       startDeepWork,
       stopDeepWork,
       cancelDeepWork,
+      abandonDeepWork,
+      registerGuardBlock,
+      syncGuardState,
+      updateGuardPrefs,
+      setGuardWhitelist,
       addTask,
       toggleTask,
       removeTask,
@@ -680,6 +841,11 @@ export function AppProvider({ children }) {
       startDeepWork,
       stopDeepWork,
       cancelDeepWork,
+      abandonDeepWork,
+      registerGuardBlock,
+      syncGuardState,
+      updateGuardPrefs,
+      setGuardWhitelist,
       addTask,
       toggleTask,
       removeTask,

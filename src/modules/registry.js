@@ -12,6 +12,7 @@ import AiDirector from './AiDirector'
 import MediaLibrary from './MediaLibrary'
 import NonverbalAcademy from './nonverbal/NonverbalAcademy'
 import HypnosisStudio from './hypnosis/HypnosisStudio'
+import DeepWork from './deepwork/DeepWork'
 import SettingsPanel from './SettingsPanel'
 
 export const MODULES = [
@@ -69,6 +70,16 @@ export const MODULES = [
     Component: AiDirector,
     group: 'quotidien',
     primary: true,
+  },
+  {
+    id: 'deepwork',
+    label: 'Deep Work verrouillé',
+    short: 'Deep Work',
+    title: 'Deep Work — Verrouillage strict',
+    subtitle: 'Bloc de 90 minutes, téléphone bloqué, appels autorisés',
+    icon: 'ShieldAlert',
+    Component: DeepWork,
+    group: 'quotidien',
   },
   {
     id: 'pantheon',

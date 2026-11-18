@@ -128,6 +128,13 @@ export const mergeImported = (imported, defaults) => {
       log: { ...(defaults.hypnosis?.log || {}), ...(incoming.hypnosis?.log || {}) },
       journal: incoming.hypnosis?.journal || defaults.hypnosis?.journal || [],
     },
+    deepWork: {
+      ...(defaults.deepWork || {}),
+      ...(incoming.deepWork || {}),
+      guard: { ...(defaults.deepWork?.guard || {}), ...(incoming.deepWork?.guard || {}) },
+      sessions: incoming.deepWork?.sessions || defaults.deepWork?.sessions || [],
+      exits: incoming.deepWork?.exits || defaults.deepWork?.exits || [],
+    },
   }
 }
 

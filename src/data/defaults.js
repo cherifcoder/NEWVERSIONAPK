@@ -106,9 +106,20 @@ export const defaultState = () => ({
   history: {}, // { 'YYYY-MM-DD': { pillars: {...}, incarnRate, score, journaledAt } }
 
   deepWork: {
-    activeSession: null, // { startedAt, intent, blockIndex }
-    sessions: [], // { id, date, minutes, intent, startedAt, endedAt }
+    activeSession: null, // { startedAt, intent, blockIndex, durationMinutes, guard, blocked }
+    sessions: [], // { id, date, minutes, intent, startedAt, endedAt, blocked }
     totalMinutes: 0,
+    // --- Verrouillage strict (module 13) ---
+    blockedCount: 0, // total cumulé de tentatives de contournement bloquées
+    guard: {
+      enabled: true, // le verrouillage strict est le comportement par défaut
+      duration: 90, // minutes du bloc verrouillé
+      allowCalls: true, // les appels téléphoniques restent autorisés
+      whitelist: [], // paquets supplémentaires autorisés pendant la session
+      lastBlockedAt: null,
+      lastBlockedPackage: null,
+    },
+    exits: [], // [{ id, at, reason, elapsedSeconds, blocked }]
   },
 
   // Le Dispatcher « Zéro Abandon »

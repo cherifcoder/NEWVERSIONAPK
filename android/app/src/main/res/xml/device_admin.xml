@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Politiques de l'administrateur d'appareil METHOD.
+  force-lock : verrouille l'écran (utilisé comme dernier recours).
+  La simple présence de cet administrateur empêche Android de désinstaller
+  METHOD tant qu'il n'est pas désactivé.
+-->
+<device-admin xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-policies>
+        <force-lock />
+    </uses-policies>
+</device-admin>

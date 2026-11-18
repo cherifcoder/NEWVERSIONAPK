@@ -81,11 +81,11 @@ export const Dashboard = ({ onNavigate }) => {
         <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-gold-500/18 bg-gradient-to-r from-gold-500/10 to-transparent p-3.5 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
             <div className="rounded-xl border border-gold-500/25 bg-void/60 p-2.5">
-              <Icon name="Timer" size={20} className="text-gold-300" />
+              <Icon name="ShieldAlert" size={20} className="text-gold-300" />
             </div>
             <div>
               <p className="text-[12px] font-semibold text-gold-100">
-                {state.deepWork.activeSession ? 'Bloc en cours' : 'Lancer un bloc de 90 min'}
+                {state.deepWork.activeSession ? 'Bloc en cours' : 'Lancer un bloc verrouillé'}
               </p>
               <p className="font-mono text-[19px] leading-tight text-gold-200 tabular-nums">
                 {state.deepWork.activeSession ? formatClock(clock.seconds) : '90:00'}
@@ -100,7 +100,7 @@ export const Dashboard = ({ onNavigate }) => {
           <Button
             variant="gold"
             icon={state.deepWork.activeSession ? 'Gauge' : 'Play'}
-            onClick={() => onNavigate?.('pillars')}
+            onClick={() => onNavigate?.('deepwork')}
           >
             {state.deepWork.activeSession ? 'Voir le chrono' : 'Démarrer'}
           </Button>

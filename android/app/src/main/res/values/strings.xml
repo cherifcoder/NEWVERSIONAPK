@@ -4,4 +4,15 @@
     <string name="title_activity_main">METHOD</string>
     <string name="package_name">com.cherifcoder.method</string>
     <string name="custom_url_scheme">com.cherifcoder.method</string>
+
+    <!-- Deep Work verrouillé -->
+    <string name="focus_channel_name">Session verrouillée</string>
+    <string name="focus_channel_description">Notification persistante pendant un Deep Work verrouillé</string>
+    <string name="focus_notification_title">Deep Work verrouillé</string>
+    <string name="focus_notification_text">%1$s restantes · %2$d tentatives bloquées</string>
+    <string name="focus_accessibility_label">METHOD — Deep Work verrouillé</string>
+    <string name="focus_accessibility_summary">METHOD — Deep Work verrouillé</string>
+    <string name="focus_accessibility_description">Bloque les applications distrayantes (réseaux sociaux, navigateurs, Paramètres, Play Store) pendant une session de Deep Work de METHOD. Les appels téléphoniques restent entièrement autorisés.</string>
+    <string name="focus_admin_explanation">Empêche la désinstallation de METHOD pendant une session de Deep Work verrouillée.</string>
+    <string name="focus_admin_disable_warning">Désactiver cette protection permettra de désinstaller METHOD et désactivera le verrouillage strict des sessions de Deep Work.</string>
 </resources>
